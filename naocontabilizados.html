@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualidade do Acompanhamento</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+  margin: 0;
+  padding: 0;
+  background-color: #F5F7FA;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #003A70;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.select-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.select-container > div {
+  flex: 1;
+}
+
+.select-container label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+select {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #333;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+select:focus {
+  border-color: #007bff;
+  background-color: #e9f5ff;
+}
+
+#downloadButton {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#downloadButton:hover {
+  background-color: #218838;
+}
+
+#csvContent {
+  max-height: 600px;
+  overflow: auto;
+  margin-top: 30px;
+}
+
+/* Tabela */
+table {
+  border-collapse: collapse;
+  font-size: 16px;
+  min-width: 1000px;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  background-color: #f9f9f9;
+}
+
+/* Cabeçalho fixo */
+th {
+  position: sticky;
+  top: 0;
+  background-color: #003A70;
+  color: white;
+  z-index: 10;
+}
+
+/* Células da COLUNA "NOME" (linhas de dados) */
+td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #e6f0fa; /* azul claro */
+  z-index: 9;
+  font-weight: bold;
+  color: #003A70;
+}
+
+/* Cabeçalho da coluna "NOME" */
+th:first-child {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: #003A70; /* azul escuro */
+  color: white;
+  z-index: 11; /* maior que o td */
+}
+
+
+/* Alternância de linhas */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Hover */
+tr:hover {
+  background-color: #e9f5ff;
+}
+
+/* Botões de faixa etária */
+.btn-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.age-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.age-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003a70);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.age-btn:active {
+  transform: scale(0.97);
+}
+
+.age-btn.active {
+  background: linear-gradient(135deg, #28a745, #218838);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.reset-btn:hover {
+  background: linear-gradient(135deg, #5a6268, #343a40);
+
+  transform: scale(0.97);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .select-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #downloadButton {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Componente Qualidade</h1>
+        <div class="select-container">
+            <div>
+                <label for="indicadorSelect">Indicador:</label>
+                <select id="indicadorSelect">
+                    <option value="Selecione">Selecione</option>
+                    <!--<option value="c1">C1 - Mais Acesso à APS</option>-->
+                    <option value="c2">C2 - Cuidado no Desenvolvimento Infantil</option>
+                    <option value="c3">C3 - Cuidado da Gestante e Puérpera</option>
+                    <option value="c4">C4 - Cuidado da Pessoa com Diabetes</option>
+                    <option value="c5">C5 - Cuidado da Pessoa com Hipertensão</option>
+                    <option value="c6">C6 - Cuidado da Pessoa Idosa</option>
+                    <option value="c7">C7 - Cuidado da Mulher na Prevenção do Câncer</option>
+                </select>
+            </div>
+            <div>
+                <label for="unidadeSelect">Unidade:</label>
+                <select id="unidadeSelect">
+                    <option value="">Selecione</option>
+                    <option value="EAP CHICO MENDES">EAP CHICO MENDES</option>
+                    <option value="EAP PLANALTO">EAP PLANALTO</option>
+                    <option value="EAP SANTA ANTONIETA">EAP SANTA ANTONIETA</option>
+                    <option value="EAP SAO JUDAS">EAP SAO JUDAS</option>
+                    <option value="USF AEROPORTO">USF AEROPORTO</option>
+                    <option value="USF ALTANEIRA">USF ALTANEIRA</option>
+                    <option value="USF ANIZ BADRA">USF ANIZ BADRA</option>
+                    <option value="USF ARGOLO FERRAO">USF ARGOLO FERRAO</option>
+                    <option value="USF AVENCAS/ AMADEU AMARAL">USF AVENCAS AMADEU AMARAL</option>
+                    <option value="USF BANDEIRANTES">USF BANDEIRANTES</option>
+                    <option value="USF BANDEIRANTES II">USF BANDEIRANTES II</option>
+                    <option value="USF CAMPO BELO">USF CAMPO BELO</option>
+                    <option value="USF COSTA E SILVA">USF COSTA E SILVA</option>
+                    <option value="USF COSTA E SILVA II">USF COSTA E SILVA II</option>
+                    <option value="USF FIGUERINHA">USF FIGUERINHA</option>
+                    <option value="USF JANIO QUADROS">USF JANIO QUADROS</option>
+                    <option value="USF JARDIM AMERICA IV">USF JARDIM AMERICA IV</option>
+                    <option value="USF JARDIM CAVALARI">USF JARDIM CAVALARI</option>
+                    <option value="USF FLAMINGO">USF JARDIM FLAMINGO</option>
+                    <option value="USF JARDIM MARACA">USF JARDIM MARACA</option>
+                    <option value="USF JARDIM MARACA II">USF JARDIM MARACA II</option>
+                    <option value="USF JARDIM MARILIA">USF JARDIM MARILIA</option>
+                    <option value="USF JARDIM RENATA">USF JARDIM RENATA</option>
+                    <option value="USF JARDIM TERUEL">USF JARDIM TERUEL</option>
+                    <option value="USF JK">USF JK</option>
+                    <option value="USF JK II">USF JK II</option>
+                    <option value="USF JOQUEY CLUBE">USF JOQUEY CLUBE</option>
+                    <option value="USF JULIETA">USF JULIETA</option>
+                    <option value="USF LACIO">USF LACIO</option>
+                    <option value="USF LEONEL DE MOURA BRIZOLA">USF LEONEL DE MOURA BRIZOLA</option>
+                    <option value="USF LILIANA">USF LILIANA</option>
+                    <option value="USF MARAJO">USF MARAJO</option>
+                    <option value="USF NOVO HORIZONTE">USF NOVO HORIZONTE</option>
+                    <option value="USF PADRE NOBREGA">USF PADRE NOBREGA</option>
+                    <option value="USF PADRE NOBREGA II">USF PADRE NOBREGA II</option>
+                    <option value="USF PALMITAL">USF PALMITAL</option>
+                    <option value="USF PRIMAVERA/ NACOES/NOVA ALMEIDA">USF PARQUE DAS NACOES</option>
+                    <option value="USF PARQUE DOS IPES">USF PARQUE DOS IPES</option>
+                    <option value="USF PRIMEIRO DE MAIO">USF PRIMEIRO DE MAIO</option>
+                    <option value="USF ROSALIA">USF ROSALIA</option>
+                    <option value="USF SANTA ANTONIETA II">USF SANTA ANTONIETA II</option>
+                    <option value="USF SANTA ANTONIETA III">USF SANTA ANTONIETA III</option>
+                    <option value="USF SANTA AUGUSTA">USF SANTA AUGUSTA</option>
+                    <option value="USF SANTA PAULA">USF SANTA PAULA</option>
+                    <option value="USF SAO MIGUEL">USF SAO MIGUEL</option>
+                    <option value="USF SAO MIGUEL II">USF SAO MIGUEL II</option>
+                    <option value="USF TOFOLI">USF TOFOLI</option>
+                    <option value="USF TRES LAGOS">USF TRES LAGOS</option>
+                    <option value="USF VIDA NOVA MARACA">USF VIDA NOVA MARACA</option>
+                    <option value="USF VILA BARROS">USF VILA BARROS</option>
+                    <option value="USF VILA HIPICA">USF VILA HIPICA</option>
+                    <option value="USF VILA NOVA">USF VILA NOVA</option>
+                    <option value="USF VILA REAL">USF VILA REAL</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Botões de faixa etária -->
+        <div id="faixaEtariaBtns" style="display:none;" class="btn-container">
+          <button class="age-btn" onclick="filtrarFaixa(this,25,64)">Citopatológico (25 a 64)</button>
+          <button class="age-btn" onclick="filtrarFaixa(this,9,14)">Vacina HPV (9 a 14)</button>
+          <button class="age-btn" onclick="filtrarFaixa(this,14,69)">Atenção Sexualidade (14 a 69)</button>
+          <button class="age-btn" onclick="filtrarFaixa(this,50,69)">Mamografia (50 a 69)</button>
+          <button class="reset-btn" onclick="removerFiltro()">Remover Filtro</button>
+        </div>
+
+        <button id="downloadButton" style="display: none;">Baixar</button>
+        <div id="csvContent"></div>
+    </div>
+
+    <script>
+        function formatDateBR(value) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}/;
+            if (dateRegex.test(value)) {
+                const parts = value.substring(0, 10).split("-");
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return value;
+        }
+
+        let ultimoCSV = "";
+        let ultimaUnidade = "";
+        let ultimaIdadeColIndex = -1;
+
+        function formatTable(data, unidade, minIdade=null, maxIdade=null) {
+            var lines = data.split("\n");
+            var htmlContent = '<table>';
+            var headerLine = lines[0].split(",");
+
+            var equipeColumnIndex = headerLine.indexOf('EQUIPE');
+            ultimaIdadeColIndex = headerLine.indexOf('IDADE');
+
+            if (equipeColumnIndex === -1 || ultimaIdadeColIndex === -1) {
+                console.error('Colunas EQUIPE ou IDADE não foram encontradas.');
+                return '';
+            }
+
+            htmlContent += '<tr>';
+            for (var i = 0; i < headerLine.length; i++) {
+                htmlContent += '<th>' + headerLine[i] + '</th>';
+            }
+            htmlContent += '</tr>';
+
+            var hasData = false;
+            var csvData = [];
+            for (var R = 1; R < lines.length; R++) {
+                var line = lines[R].split(",");
+                if (line.length <= equipeColumnIndex) continue;
+                var equipeValue = line[equipeColumnIndex].trim();
+                var idadeValue = parseInt(line[ultimaIdadeColIndex]);
+
+                if (equipeValue === unidade && 
+                    (minIdade === null || (idadeValue >= minIdade && idadeValue <= maxIdade))) {
+                    
+                    hasData = true;
+                    htmlContent += '<tr>';
+                    var rowData = [];
+                    for (var C = 0; C < line.length; C++) {
+                        var formatted = formatDateBR(line[C]);
+                        htmlContent += '<td>' + formatted + '</td>';
+                        rowData.push(formatted);
+                    }
+                    csvData.push(rowData.join(','));
+                    htmlContent += '</tr>';
+                }
+            }
+
+            htmlContent += '</table>';
+            if (!hasData) {
+                htmlContent = '<p>Não existem dados para esse filtro.</p>';
+            }
+            return { html: htmlContent, csv: csvData.join('\n') };
+        }
+
+        function loadFile(indicador, unidade) {
+            if (indicador === 'Selecione' || unidade === '') {
+                document.getElementById('csvContent').innerHTML = '';
+                document.getElementById('downloadButton').style.display = 'none';
+                document.getElementById('faixaEtariaBtns').style.display = 'none';
+                return;
+            }
+            var filePath = indicador + '.csv';
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', filePath, true);
+            xhr.onload = function () {
+                ultimoCSV = xhr.responseText;
+                ultimaUnidade = unidade;
+                
+                if (indicador === 'c7') {
+                    document.getElementById('faixaEtariaBtns').style.display = 'flex';
+                } else {
+                    document.getElementById('faixaEtariaBtns').style.display = 'none';
+                }
+
+                var formattedData = formatTable(ultimoCSV, unidade);
+                document.getElementById('csvContent').innerHTML = formattedData.html;
+
+                var downloadButton = document.getElementById('downloadButton');
+                downloadButton.style.display = 'block';
+                downloadButton.onclick = function () {
+                    var csvContent = formattedData.csv;
+                    var blob = new Blob([csvContent], { type: 'text/csv' });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'dados.csv';
+                    link.click();
+                };
+            };
+            xhr.send();
+        }
+
+        function filtrarFaixa(btn, min, max) {
+    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+            var formattedData = formatTable(ultimoCSV, ultimaUnidade, min, max);
+            document.getElementById('csvContent').innerHTML = formattedData.html;
+        }
+
+        document.getElementById('indicadorSelect').addEventListener('change', function () {
+            var indicador = this.value;
+            var unidade = document.getElementById('unidadeSelect').value;
+            loadFile(indicador, unidade);
+        });
+        function removerFiltro() {
+    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+    var formattedData = formatTable(ultimoCSV, ultimaUnidade);
+    document.getElementById('csvContent').innerHTML = formattedData.html;
+}
+
+document.getElementById('unidadeSelect').addEventListener('change', function () {
+            var indicador = document.getElementById('indicadorSelect').value;
+            var unidade = this.value;
+            loadFile(indicador, unidade);
+        });
+    </script>
+</body>
+
+</html>

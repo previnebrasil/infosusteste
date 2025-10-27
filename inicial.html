@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao iNFO SUS Marília</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        /* Estilos Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #5e6e8e, #2e3b4e);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            max-width: 150px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #2e3b4e;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .category {
+            background-color: #2e3b4e;
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            width: 250px; /* Largura fixa */
+            height: 250px; /* Altura fixa */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .category:hover {
+            background-color: #1f2a37;
+            transform: scale(1.1);
+        }
+
+        .category img {
+            width: 40px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .category:hover img {
+            opacity: 1;
+        }
+
+        .category p {
+            font-size: 14px;
+            color: #ddd;
+            margin-top: 10px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 30px;
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .category {
+                font-size: 16px;
+                padding: 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .category {
+                width: 200px; /* Ajuste de largura para telas pequenas */
+                height: 200px; /* Ajuste de altura para telas pequenas */
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo iNFO SUS Marília">
+        </div>
+        <h1>Bem-vindo ao iNFO SUS Marília</h1>
+        <p class="subtitle">Explore nossos recursos e dados de maneira rápida e interativa.</p>
+
+        <div class="categories">
+            <!-- Seção Gestão -->
+            <div class="category" onclick="window.location.href='exames.html'">
+                <img src="exames.png" alt="Painel Coletas">
+                <p>Painel Coletas</p>
+                <p>Gerencie e acompanhe as coletas de exames com eficiência.</p>
+            </div>
+
+            <!-- Seção Capitação -->
+            <div class="category" onclick="window.location.href='coletas.html'">
+                <img src="coleta.png" alt="iNFO SUS Coletas">
+                <p>iNFO SUS Coletas</p>
+                <p>Controle de coletas de exames laboratoriais.</p>
+            </div>
+
+            <!-- Seção Financiamento -->
+            <div class="category" onclick="window.location.href='producao.html'">
+                <img src="producao.png" alt="Produção da APS">
+                <p>Produção da APS</p>
+                <p>Visualize a produção da Atenção Primária à Saúde.</p>
+            </div>
+
+            <!-- Seção Dengue -->
+            <div class="category" onclick="window.location.href='dengue.html'">
+                <img src="dengue.png" alt="Dengue">
+                <p>Dengue</p>
+                <p>Informações e dados sobre a situação da dengue.</p>
+            </div>
+
+            <!-- Seção Extras -->
+            <div class="category" onclick="window.location.href='limites.html'">
+                <img src="limites.png" alt="Limites">
+                <p>Limites</p>
+                <p>Controle da área de abrangência das unidades de saúde.</p>
+            </div>
+
+            <!-- Seção Financiamento -->
+            <div class="category" onclick="window.location.href='financiamento.html'">
+                <img src="financiamento.png" alt="Componentes Financiamento SUS">
+                <p>Componentes Financiamento SUS</p>
+                <p>Confira as informações sobre o financiamento do SUS.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2023-2025 Núcleo de Saúde Digital - SMS Marília</p>
+        </div>
+    </div>
+</body>
+
+</html>
+

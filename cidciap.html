@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CID-10 e CIAP2</title>
+    <style>
+        /* Estilizando os frames */
+        #frameContainer {
+            display: flex;
+            height: calc(100vh - 120px); /* Altura da janela do navegador menos a altura dos botões */
+            margin-top: 70px; /* Ajuste da posição do conteúdo */
+        }
+        iframe {
+            flex-grow: 1;
+            border: none;
+            display: none; /* Inicia oculto */
+        }
+        /* Estilizando os botões */
+        button {
+            position: center;
+            top: 20px; /* Distância do topo ajustada */
+            width: 100px; /* Largura dos botões */
+            height: 40px; /* Altura dos botões */
+            font-size: 14px; /* Tamanho da fonte */
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50; /* Fundo verde claro */
+            border: none; /* Removendo borda */
+            border-radius: 5px; /* Borda arredondada */
+            cursor: pointer; /* Cursor de ponteiro */
+            margin: 0 5px; /* Margem entre os botões */
+        }
+        #buttonCID10 {
+            left: 20px; /* Posição do botão CID-10 */
+        }
+        #buttonCIAP2 {
+            left: 130px; /* Posição do botão CIAP2 */
+        }
+        #buttonCompare {
+            left: 240px; /* Posição do botão Comparar */
+        }
+    </style>
+</head>
+<body>
+    <button id="buttonCID10" onclick="openCID10()">CID-10</button>
+    <button id="buttonCIAP2" onclick="openCIAP2()">CIAP2</button>
+    <button id="buttonCompare" onclick="compare()">Comparar</button> <!-- Novo botão -->
+
+    <div id="frameContainer">
+        <iframe id="cid10Frame" src="cid10.html"></iframe>
+        <iframe id="ciap2Frame" src="ciap2.html"></iframe>
+    </div>
+
+    <script>
+        function openCID10() {
+            document.getElementById("cid10Frame").style.display = "block";
+            document.getElementById("ciap2Frame").style.display = "none";
+        }
+
+        function openCIAP2() {
+            document.getElementById("cid10Frame").style.display = "none";
+            document.getElementById("ciap2Frame").style.display = "block";
+        }
+
+        function compare() {
+            document.getElementById("cid10Frame").style.display = "block";
+            document.getElementById("ciap2Frame").style.display = "block";
+        }
+    </script>
+</body>
+</html>

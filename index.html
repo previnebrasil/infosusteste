@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iNFO SUS Marília</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        /* Estilos gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
+        header {
+            background-color: #2e3b4e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between; /* Espalho logo à esquerda e botões ao centro */
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            max-width: 50px;
+            margin-right: 10px; /* Espaçamento entre logo e nome */
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            flex-grow: 1; /* Para fazer os botões ficarem ao centro */
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+            position: relative;
+        }
+
+        nav ul li a {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #3b4a62;
+            color: white;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #1f2a37;
+            transform: scale(1.05);
+        }
+
+        .sub-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #3b4a62;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1;
+            min-width: 250px;
+        }
+
+        nav ul li:hover .sub-menu {
+            display: block;
+        }
+
+        .sub-menu li {
+            padding: 8px 15px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .sub-menu li a {
+            color: #ddd;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .sub-menu li a:hover {
+            background-color: #1f2a37;
+            color: white;
+        }
+
+        .sub-menu li img {
+            max-width: 30px; /* Define o tamanho da imagem */
+            margin-right: 10px; /* Espaçamento entre imagem e texto */
+        }
+
+        /* Modal - Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .modal-content {
+            background-color: #2e3b4e;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 80%;
+        }
+
+        .modal h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border-radius: 30px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #ff1a1a;
+        }
+
+        /* iframe */
+        iframe {
+            width: 100%;
+            min-height: 1000px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #2e3b4e;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            iframe {
+				min-height: 600px; /* Menor altura para telas pequenas */
+            }
+
+            .banner-text {
+                max-width: 80%;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin-bottom: 10px;
+            }
+
+            iframe {
+                min-height: 600px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            <h1>iNFO SUS Marília</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="inicial.html" target="iframe">Home</a></li>
+                <li id="desempenho-menu">
+                    <a href="#">Gestão</a>
+                    <ul class="sub-menu">
+                        <li><a href="coletas.html" target="iframe"><img src="coleta.png" alt="Gestão"> iNFO SUS Coletas</a></li>
+                        <li><a href="exames.html" target="iframe"><img src="exames.png" alt="Exames"> Controle de Exames</a></li>
+                        <!--<li><a href="q1.html" target="iframe"><img src="popv.png" alt="Vinculação"> Vinculação</a></li>-->
+                        <li><a href="producao.html" target="iframe"><img src="producao.png" alt="Produção"> Produção da APS</a></li>
+						<li><a href="saudeadulto.html" target="iframe"><img src="saudeadulto.png" alt="Saúde do Adulto"> Saúde do Adulto</a></li>
+						<li><a href="vacina.html" target="iframe"><img src="vacina.png" alt="Vacina"> Vacina</a></li>
+						<li><a href="gesta.html" target="iframe"><img src="gesta.png" alt="Gestações Pendentes"> Gestações Pendentes</a></li>
+                    </ul>
+                </li>
+                <li id="capitacao-menu">
+                    <a href="#">ACS</a>
+                    <ul class="sub-menu">
+                        <li><a href="individual.html" target="iframe"><img src="individual.png" alt="Cadastro"> Cadastro Individual</a></li>
+                    </ul>
+                </li>
+                <li id="financiamento-menu">
+                    <a href="#">Financiamento</a>
+                    <ul class="sub-menu">
+                        <li><a href="financiamento.html" target="iframe"><img src="financiamento.png" alt="Componentes"> Componentes</a></li>
+                        <li><a href="naocontabilizados.html" target="iframe"><img src="condp.png" alt="Pendentes"> Qualidade do Acompanhamento</a></li>
+                    </ul>
+                </li>
+                <li id="dengue-menu">
+                    <a href="#">Dengue</a>
+                    <ul class="sub-menu">
+                        <li><a href="dengue.html" target="iframe"><img src="dengue.png" alt="Monitoramento"> Monitoramento</a></li>
+                        <li><a href="atendengue.html" target="iframe"><img src="atendengue.png" alt="Atendimento"> Atendimento Dengue</a></li>
+                    </ul>
+                </li>
+                <li id="extras-menu">
+                    <a href="#">Extras</a>
+                    <ul class="sub-menu">
+                        <li><a href="cidciap.html" target="iframe"><img src="cid10.png" alt="CID/CIAP"> CID / CIAP</a></li>
+                        <li><a href="limites.html" target="iframe"><img src="limites.png" alt="Limites"> Limites</a></li>
+                        <li><a href="material.html" target="iframe"><img src="material.png" alt="Material"> Material de Apoio</a></li>
+                        <li><a href="contato.html" target="iframe"><img src="contato.png" alt="Contato"> Contato</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--<div class="modal" id="welcomeModal">
+        <div class="modal-content">
+            <h2>Bem-vindo ao iNFO SUS Marília</h2>
+            <p>Explore os recursos e dados do sistema.</p>
+            <button class="close-btn" onclick="fecharModal()">Fechar</button>
+        </div>
+    </div>-->
+
+    <iframe id="iframe" name="iframe" src="inicial.html"></iframe>
+
+    <div class="footer">
+        <p>&copy; 2023-2025 Núcleo de Saúde Digital - SMS Marília</p>
+    </div>
+
+    <!--<script>
+        // Função para abrir o modal
+        function abrirModal() {
+            document.getElementById('welcomeModal').style.display = 'flex';
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            document.getElementById('welcomeModal').style.display = 'none';
+        }
+
+        // Chama o modal quando a página carregar
+        window.onload = function () {
+            abrirModal();
+            document.getElementById('iframe').src = "inicial.html";
+        };
+    </script>-->
+</body>
+
+</html>
+

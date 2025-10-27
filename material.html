@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Material de Apoio</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #F0F2F5;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      color: #003A70;
+      margin-bottom: 30px;
+    }
+
+    .lista-documentos {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    details {
+      width: 100%;
+      max-width: 800px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      transition: box-shadow 0.2s ease;
+    }
+
+    details[open] {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    summary {
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #003A70;
+      margin-bottom: 8px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    li {
+      padding: 4px 0;
+    }
+
+    li a {
+      text-decoration: none;
+      color: #1a1a1a;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    li a:hover {
+      color: #003A70;
+      text-decoration: underline;
+    }
+
+    #iframe-container {
+      margin-top: 40px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 700px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    @media screen and (max-width: 768px) {
+      details {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Material de Apoio</h1>
+
+    <div class="lista-documentos">
+      <details>
+        <summary>Legislação</summary>
+        <ul>
+          <li><a href="#" onclick="showFile('https://bvsms.saude.gov.br/bvs/saudelegis/gm/2024/prt3493_11_04_2024.html')">Portaria 3493/24 (Financiamento APS)</a></li>
+          <li><a href="#" onclick="showFile('https://www.in.gov.br/en/web/dou/-/portaria-saps/ms-n-161-de-10-de-dezembro-de-2024-603288832')">Portaria SAPS/MS 161/24 - Componente de Vínculo e Acompanhamento</a></li>
+          <li><a href="#" onclick="showFile('nm.pdf')">Nota Metodológica - Componente de Vínculo e Acompanhamento</a></li>
+          <li><a href="#" onclick="showFile('c1.pdf')">Ficha de Qualificação - C1 Mais Acesso à APS</a></li>
+          <li><a href="#" onclick="showFile('c2.pdf')">Ficha de Qualificação - C2 Desenvolvimento Infantil</a></li>
+          <li><a href="#" onclick="showFile('c3.pdf')">Ficha de Qualificação - C3 Gestante e Puérpera</a></li>
+          <li><a href="#" onclick="showFile('c4.pdf')">Ficha de Qualificação - C4 Pessoa com Diabetes</a></li>
+          <li><a href="#" onclick="showFile('c5.pdf')">Ficha de Qualificação - C5 Pessoa com Hipertensão</a></li>
+          <li><a href="#" onclick="showFile('c6.pdf')">Ficha de Qualificação - C6 Pessoa Idosa</a></li>
+          <li><a href="#" onclick="showFile('c7.pdf')">Ficha de Qualificação - C7 Prevenção do Câncer</a></li>
+          <li><a href="#" onclick="showFile('b1.pdf')">Ficha de Qualificação - B1 Primeira Consulta</a></li>
+          <li><a href="#" onclick="showFile('b2.pdf')">Ficha de Qualificação - B2 Tratamentos Concluídos</a></li>
+          <li><a href="#" onclick="showFile('b3.pdf')">Ficha de Qualificação - B3 Taxa de Exodontia</a></li>
+          <li><a href="#" onclick="showFile('b4.pdf')">Ficha de Qualificação - B4 Escovação Supervisionada</a></li>
+          <li><a href="#" onclick="showFile('b5.pdf')">Ficha de Qualificação - B5 Procedimentos Odontológicos</a></li>
+          <li><a href="#" onclick="showFile('b6.pdf')">Ficha de Qualificação - B6 Tratamento Restaurador</a></li>
+          <li><a href="#" onclick="showFile('m1.pdf')">Ficha de Qualificação - M1 Média de Atendimentos</a></li>
+          <li><a href="#" onclick="showFile('m2.pdf')">Ficha de Qualificação - M2 Ações Interprofissionais</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Manuais e Apoio</summary>
+        <ul>
+          <li><a href="#" onclick="showFile('infosuscoletas.pdf')">iNFO SUS Coletas</a></li>
+          <li><a href="#" onclick="showFile('ciap2.pdf')">CIAP2</a></li>
+          <li><a href="#" onclick="showFile('https://sisaps.saude.gov.br/sistemas/esusaps/docs/manual/')">Manual PEC</a></li>
+          <li><a href="#" onclick="showFile('https://docs.google.com/document/d/1GJOxB6IWkt24bLV8uRkiv4WvyKB6YZYS/edit?usp=drive_link')">Fluxo de Transferência de Prontuários</a></li>
+          <li><a href="#" onclick="showFile('https://docs.google.com/document/d/1j_z5a1g1Jw6I-g3UkXYrflzU_upDj-NX/edit?usp=drive_link')">SOAP e Registro Tardio</a></li>
+          <!--<li><a href="#" onclick="showFile('https://docs.google.com/document/d/1JY3M8CvcqIasPp_wfU7oG2ylbFdQ4vJe/edit?usp=drive_link')">Tutorial de Resultado de Exame</a></li>
+          <li><a href="#" onclick="showFile('https://docs.google.com/document/d/1BLTB3p3LCap5OKIWTKvn3PFENIbqekKD/edit?usp=sharing')">Tutorial Coleta de Citopatológico</a></li>
+          <li><a href="#" onclick="showFile('https://docs.google.com/document/d/1q0wcnzAt_fj4crSQFWLMCpU_GqNSBXIp/edit?usp=sharing')">Tutorial Teleconsulta</a></li>
+          <li><a href="#" onclick="showFile('https://docs.google.com/document/d/15qVvGFduyzIhTJ7ZUtbnZjbuWKftbb5y/edit?usp=sharing')">Tutorial Correção de Inconsistências</a></li>-->
+        </ul>
+      </details>
+
+      <details>
+        <summary>Saúde Bucal</summary>
+        <ul>
+          <li><a href="#" onclick="showFile('POP.pdf')">POP</a></li>
+          <li><a href="#" onclick="showFile('Protocolo Municipal de Especialiades Odontológicas.pdf')">Protocolo Municipal de Especialidades Odontológicas</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Saúde do Adulto</summary>
+        <ul>
+          <li><a href="#" onclick="showFile('PROTOCOLO DIABETES  DOM.pdf')">Protocolo Diabetes</a></li>
+          <li><a href="#" onclick="showFile('PROTOCOLO ADULTO COM HAS DIARIO OFICIAL.pdf')">Protocolo Hipertensão</a></li>
+        </ul>
+      </details>
+    </div>
+
+    <div id="iframe-container"></div>
+  </div>
+
+  <script>
+    function showFile(url) {
+      // Fecha todos os <details> abertos
+      document.querySelectorAll("details[open]").forEach((d) => {
+        d.removeAttribute("open");
+      });
+
+      // Mostra o conteúdo no iframe
+      const iframeContainer = document.getElementById("iframe-container");
+      iframeContainer.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`;
+    }
+  </script>
+</body>
+</html>
+
+
