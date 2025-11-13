@@ -1,253 +1,246 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qualidade do Acompanhamento</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-    <style>
-        body {
-  margin: 0;
-  padding: 0;
-  background-color: #F5F7FA;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qualidade do Acompanhamento</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #F5F7FA;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      transition: background-color 0.3s ease;
+    }
 
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
 
-h1 {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #003A70;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #003A70;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-.select-container {
-  display: flex;
-  gap: 20px;
-  align-items: flex-end;
-  margin-bottom: 20px;
-}
+    .select-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
 
-.select-container > div {
-  flex: 1;
-}
+    .select-container > div { flex: 1; }
 
-.select-container label {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 6px;
-  color: #333;
-}
+    .select-container label {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 6px;
+      color: #333;
+    }
 
-select {
-  width: 100%;
-  padding: 10px 15px;
-  font-size: 16px;
-  color: #333;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
+    select {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      color: #333;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
 
-select:focus {
-  border-color: #007bff;
-  background-color: #e9f5ff;
-}
+    select:focus {
+      border-color: #007bff;
+      background-color: #e9f5ff;
+    }
 
-#downloadButton {
-  background-color: #28a745;
-  color: white;
-  padding: 12px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    #downloadButton {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-#downloadButton:hover {
-  background-color: #218838;
-}
+    #downloadButton:hover { background-color: #218838; }
 
-#csvContent {
-  max-height: 600px;
-  overflow: auto;
-  margin-top: 30px;
-}
+    #csvContent {
+      max-height: 600px;
+      overflow: auto;
+      margin-top: 30px;
+    }
 
-/* Tabela */
-table {
-  border-collapse: collapse;
-  font-size: 16px;
-  min-width: 1000px;
-  width: 100%;
-}
+    table {
+      border-collapse: collapse;
+      font-size: 16px;
+      min-width: 1000px;
+      width: 100%;
+    }
 
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-  background-color: #f9f9f9;
-}
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      background-color: #f9f9f9;
+    }
 
-/* Cabeçalho fixo */
-th {
-  position: sticky;
-  top: 0;
-  background-color: #003A70;
-  color: white;
-  z-index: 10;
-}
+    th {
+      position: sticky;
+      top: 0;
+      background-color: #003A70;
+      color: white;
+      z-index: 10;
+    }
 
-/* Células da COLUNA "NOME" (linhas de dados) */
-td:first-child {
-  position: sticky;
-  left: 0;
-  background-color: #e6f0fa; /* azul claro */
-  z-index: 9;
-  font-weight: bold;
-  color: #003A70;
-}
+    td:first-child {
+      position: sticky;
+      left: 0;
+      background-color: #e6f0fa;
+      z-index: 9;
+      font-weight: bold;
+      color: #003A70;
+    }
 
-/* Cabeçalho da coluna "NOME" */
-th:first-child {
-  position: sticky;
-  top: 0;
-  left: 0;
-  background-color: #003A70; /* azul escuro */
-  color: white;
-  z-index: 11; /* maior que o td */
-}
+    th:first-child {
+      position: sticky;
+      top: 0;
+      left: 0;
+      background-color: #003A70;
+      color: white;
+      z-index: 11;
+    }
 
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    tr:hover { background-color: #e9f5ff; }
 
-/* Alternância de linhas */
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
 
-/* Hover */
-tr:hover {
-  background-color: #e9f5ff;
-}
+    .age-btn {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
 
-/* Botões de faixa etária */
-.btn-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-}
+    .age-btn:hover {
+      background: linear-gradient(135deg, #0056b3, #003a70);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    }
 
-.age-btn {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+    .age-btn.active {
+      background: linear-gradient(135deg, #28a745, #218838);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+    }
 
-.age-btn:hover {
-  background: linear-gradient(135deg, #0056b3, #003a70);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-}
+    .reset-btn {
+      background: linear-gradient(135deg, #6c757d, #495057);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
 
-.age-btn:active {
-  transform: scale(0.97);
-}
+    .reset-btn:hover {
+      background: linear-gradient(135deg, #5a6268, #343a40);
+      transform: scale(0.97);
+    }
 
-.age-btn.active {
-  background: linear-gradient(135deg, #28a745, #218838);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-}
+    /* --- Tema Odonto --- */
+    body.modo-odonto {
+      background-color: #F5FFF7;
+    }
 
-.reset-btn {
-  background: linear-gradient(135deg, #6c757d, #495057);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+    body.modo-odonto h1 {
+      color: #2E8B57;
+    }
 
-.reset-btn:hover {
-  background: linear-gradient(135deg, #5a6268, #343a40);
+    body.modo-odonto th {
+      background-color: #2E8B57;
+    }
 
-  transform: scale(0.97);
-}
+    body.modo-odonto td:first-child {
+      background-color: #E4F5E9;
+      color: #2E8B57;
+    }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .select-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    body.modo-odonto .age-btn.active {
+      background: linear-gradient(135deg, #2E8B57, #1E6540);
+    }
 
-  select {
-    width: 100%;
-    margin-bottom: 10px;
-  }
+    body.modo-odonto #downloadButton {
+      background-color: #2E8B57;
+    }
 
-  #downloadButton {
-    width: 100%;
-    margin-top: 20px;
-  }
+    body.modo-odonto #downloadButton:hover {
+      background-color: #1E6540;
+    }
 
-  table {
-    font-size: 14px;
-  }
-}
-    </style>
+    @media (max-width: 768px) {
+      .select-container { flex-direction: column; align-items: flex-start; }
+      select { width: 100%; margin-bottom: 10px; }
+      #downloadButton { width: 100%; margin-top: 20px; }
+      table { font-size: 14px; }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Componente Qualidade</h1>
-        <div class="select-container">
-            <div>
-                <label for="indicadorSelect">Indicador:</label>
-                <select id="indicadorSelect">
-                    <option value="Selecione">Selecione</option>
-                    <!--<option value="c1">C1 - Mais Acesso à APS</option>-->
-                    <option value="c2">C2 - Cuidado no Desenvolvimento Infantil</option>
-                    <option value="c3">C3 - Cuidado da Gestante e Puérpera</option>
-                    <option value="c4">C4 - Cuidado da Pessoa com Diabetes</option>
-                    <option value="c5">C5 - Cuidado da Pessoa com Hipertensão</option>
-                    <option value="c6">C6 - Cuidado da Pessoa Idosa</option>
-                    <option value="c7">C7 - Cuidado da Mulher na Prevenção do Câncer</option>
-                </select>
-            </div>
-            <div>
-                <label for="unidadeSelect">Unidade:</label>
-                <select id="unidadeSelect">
-                    <option value="">Selecione</option>
-                    <option value="EAP CHICO MENDES">EAP CHICO MENDES</option>
+  <div class="container">
+    <h1>Componente Qualidade - APS</h1>
+
+    <!-- Botões de módulo -->
+    <div class="btn-container" style="margin-bottom: 30px;">
+      <button class="age-btn active" id="btnAPS" onclick="switchModule('APS')">APS</button>
+      <button class="age-btn" id="btnOdonto" onclick="switchModule('Odonto')">Odonto</button>
+    </div>
+
+    <div class="select-container">
+      <div>
+        <label for="indicadorSelect">Indicador:</label>
+        <select id="indicadorSelect">
+          <option value="Selecione">Selecione</option>
+        </select>
+      </div>
+      <div>
+        <label for="unidadeSelect">Unidade:</label>
+        <select id="unidadeSelect">
+          <option value="">Selecione</option>
+          <!-- Unidades -->
+          <option value="EAP CHICO MENDES">EAP CHICO MENDES</option>
                     <option value="EAP PLANALTO">EAP PLANALTO</option>
                     <option value="EAP SANTA ANTONIETA">EAP SANTA ANTONIETA</option>
                     <option value="EAP SAO JUDAS">EAP SAO JUDAS</option>
@@ -291,6 +284,7 @@ tr:hover {
                     <option value="USF SANTA ANTONIETA III">USF SANTA ANTONIETA III</option>
                     <option value="USF SANTA AUGUSTA">USF SANTA AUGUSTA</option>
                     <option value="USF SANTA PAULA">USF SANTA PAULA</option>
+                    <option value="USF SAO BENTO">USF SAO BENTO</option>
                     <option value="USF SAO MIGUEL">USF SAO MIGUEL</option>
                     <option value="USF SAO MIGUEL II">USF SAO MIGUEL II</option>
                     <option value="USF TOFOLI">USF TOFOLI</option>
@@ -300,148 +294,164 @@ tr:hover {
                     <option value="USF VILA HIPICA">USF VILA HIPICA</option>
                     <option value="USF VILA NOVA">USF VILA NOVA</option>
                     <option value="USF VILA REAL">USF VILA REAL</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Botões de faixa etária -->
-        <div id="faixaEtariaBtns" style="display:none;" class="btn-container">
-          <button class="age-btn" onclick="filtrarFaixa(this,25,64)">Citopatológico (25 a 64)</button>
-          <button class="age-btn" onclick="filtrarFaixa(this,9,14)">Vacina HPV (9 a 14)</button>
-          <button class="age-btn" onclick="filtrarFaixa(this,14,69)">Atenção Sexualidade (14 a 69)</button>
-          <button class="age-btn" onclick="filtrarFaixa(this,50,69)">Mamografia (50 a 69)</button>
-          <button class="reset-btn" onclick="removerFiltro()">Remover Filtro</button>
-        </div>
-
-        <button id="downloadButton" style="display: none;">Baixar</button>
-        <div id="csvContent"></div>
+        </select>
+      </div>
     </div>
 
-    <script>
-        function formatDateBR(value) {
-            const dateRegex = /^\d{4}-\d{2}-\d{2}/;
-            if (dateRegex.test(value)) {
-                const parts = value.substring(0, 10).split("-");
-                return `${parts[2]}/${parts[1]}/${parts[0]}`;
-            }
-            return value;
+    <div id="faixaEtariaBtns" style="display:none;" class="btn-container">
+      <button class="age-btn" onclick="filtrarFaixa(this,25,64)">Citopatológico (25 a 64)</button>
+      <button class="age-btn" onclick="filtrarFaixa(this,9,14)">Vacina HPV (9 a 14)</button>
+      <button class="age-btn" onclick="filtrarFaixa(this,14,69)">Atenção Sexualidade (14 a 69)</button>
+      <button class="age-btn" onclick="filtrarFaixa(this,50,69)">Mamografia (50 a 69)</button>
+      <button class="reset-btn" onclick="removerFiltro()">Remover Filtro</button>
+    </div>
+
+    <button id="downloadButton" style="display:none;">Baixar</button>
+    <div id="csvContent"></div>
+  </div>
+
+  <script>
+    const indicadoresAPS = [
+      {value: 'c2', text: 'C2 - Cuidado no Desenvolvimento Infantil'},
+      {value: 'c3', text: 'C3 - Cuidado da Gestante e Puérpera'},
+      {value: 'c4', text: 'C4 - Cuidado da Pessoa com Diabetes'},
+      {value: 'c5', text: 'C5 - Cuidado da Pessoa com Hipertensão'},
+      {value: 'c6', text: 'C6 - Cuidado da Pessoa Idosa'},
+      {value: 'c7', text: 'C7 - Cuidado da Mulher na Prevenção do Câncer'}
+    ];
+
+    const indicadoresOdonto = [
+      {value: 'b2', text: 'B2 - Tratamento concluído'},
+      {value: 'b3', text: 'B3 - Taxa de exodontia'},
+      {value: 'b4', text: 'B4 - Escovação supervisionada (6 a 12 anos)'},
+      {value: 'b5', text: 'B5 - Procedimentos odontológicos preventivos'},
+      {value: 'b6', text: 'B6 - Tratamento restaurador atraumático'}
+    ];
+
+    let moduloAtual = 'APS';
+    let ultimoCSV = "";
+    let ultimaUnidade = "";
+    let ultimaIdadeColIndex = -1;
+
+    function switchModule(modulo) {
+      moduloAtual = modulo;
+      const btnAPS = document.getElementById('btnAPS');
+      const btnOdonto = document.getElementById('btnOdonto');
+      const titulo = document.querySelector('h1');
+      const select = document.getElementById('indicadorSelect');
+
+      btnAPS.classList.toggle('active', modulo === 'APS');
+      btnOdonto.classList.toggle('active', modulo === 'Odonto');
+      select.innerHTML = '<option value="Selecione">Selecione</option>';
+
+      const lista = modulo === 'APS' ? indicadoresAPS : indicadoresOdonto;
+      lista.forEach(i => {
+        const opt = document.createElement('option');
+        opt.value = i.value;
+        opt.textContent = i.text;
+        select.appendChild(opt);
+      });
+
+      if (modulo === 'APS') {
+        titulo.textContent = "Componente Qualidade - APS";
+        document.body.classList.remove('modo-odonto');
+      } else {
+        titulo.textContent = "Componente Qualidade - Odonto";
+        document.body.classList.add('modo-odonto');
+      }
+
+      document.getElementById('csvContent').innerHTML = '';
+      document.getElementById('downloadButton').style.display = 'none';
+      document.getElementById('faixaEtariaBtns').style.display = 'none';
+    }
+
+    function formatDateBR(value) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}/;
+      if (dateRegex.test(value)) {
+        const parts = value.substring(0, 10).split("-");
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return value;
+    }
+
+    function formatTable(data, unidade, minIdade=null, maxIdade=null) {
+      const lines = data.split("\n");
+      let html = '<table>';
+      const header = lines[0].split(",");
+      const equipeIdx = header.indexOf('EQUIPE');
+      ultimaIdadeColIndex = header.indexOf('IDADE');
+      if (equipeIdx === -1 || ultimaIdadeColIndex === -1) return '';
+
+      html += '<tr>' + header.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+      let csv = [];
+      let hasData = false;
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",");
+        if (cols.length <= equipeIdx) continue;
+        const equipe = cols[equipeIdx].trim();
+        const idade = parseInt(cols[ultimaIdadeColIndex]);
+        if (equipe === unidade && (minIdade === null || (idade >= minIdade && idade <= maxIdade))) {
+          hasData = true;
+          html += '<tr>' + cols.map(c => `<td>${formatDateBR(c)}</td>`).join('') + '</tr>';
+          csv.push(cols.join(','));
         }
+      }
+      html += '</table>';
+      if (!hasData) html = '<p>Não existem dados para esse filtro.</p>';
+      return { html, csv: csv.join('\n') };
+    }
 
-        let ultimoCSV = "";
-        let ultimaUnidade = "";
-        let ultimaIdadeColIndex = -1;
+    function loadFile(indicador, unidade) {
+      if (indicador === 'Selecione' || unidade === '') {
+        document.getElementById('csvContent').innerHTML = '';
+        document.getElementById('downloadButton').style.display = 'none';
+        document.getElementById('faixaEtariaBtns').style.display = 'none';
+        return;
+      }
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', indicador + '.csv', true);
+      xhr.onload = function() {
+        ultimoCSV = xhr.responseText;
+        ultimaUnidade = unidade;
+        document.getElementById('faixaEtariaBtns').style.display = (indicador === 'c7' ? 'flex' : 'none');
+        const formatted = formatTable(ultimoCSV, unidade);
+        document.getElementById('csvContent').innerHTML = formatted.html;
+        const btn = document.getElementById('downloadButton');
+        btn.style.display = 'block';
+        btn.onclick = function() {
+          const blob = new Blob([formatted.csv], { type: 'text/csv' });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'dados.csv';
+          link.click();
+        };
+      };
+      xhr.send();
+    }
 
-        function formatTable(data, unidade, minIdade=null, maxIdade=null) {
-            var lines = data.split("\n");
-            var htmlContent = '<table>';
-            var headerLine = lines[0].split(",");
+    function filtrarFaixa(btn, min, max) {
+      document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const formatted = formatTable(ultimoCSV, ultimaUnidade, min, max);
+      document.getElementById('csvContent').innerHTML = formatted.html;
+    }
 
-            var equipeColumnIndex = headerLine.indexOf('EQUIPE');
-            ultimaIdadeColIndex = headerLine.indexOf('IDADE');
+    function removerFiltro() {
+      document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+      const formatted = formatTable(ultimoCSV, ultimaUnidade);
+      document.getElementById('csvContent').innerHTML = formatted.html;
+    }
 
-            if (equipeColumnIndex === -1 || ultimaIdadeColIndex === -1) {
-                console.error('Colunas EQUIPE ou IDADE não foram encontradas.');
-                return '';
-            }
+    document.getElementById('indicadorSelect').addEventListener('change', function () {
+      loadFile(this.value, document.getElementById('unidadeSelect').value);
+    });
 
-            htmlContent += '<tr>';
-            for (var i = 0; i < headerLine.length; i++) {
-                htmlContent += '<th>' + headerLine[i] + '</th>';
-            }
-            htmlContent += '</tr>';
+    document.getElementById('unidadeSelect').addEventListener('change', function () {
+      loadFile(document.getElementById('indicadorSelect').value, this.value);
+    });
 
-            var hasData = false;
-            var csvData = [];
-            for (var R = 1; R < lines.length; R++) {
-                var line = lines[R].split(",");
-                if (line.length <= equipeColumnIndex) continue;
-                var equipeValue = line[equipeColumnIndex].trim();
-                var idadeValue = parseInt(line[ultimaIdadeColIndex]);
-
-                if (equipeValue === unidade && 
-                    (minIdade === null || (idadeValue >= minIdade && idadeValue <= maxIdade))) {
-                    
-                    hasData = true;
-                    htmlContent += '<tr>';
-                    var rowData = [];
-                    for (var C = 0; C < line.length; C++) {
-                        var formatted = formatDateBR(line[C]);
-                        htmlContent += '<td>' + formatted + '</td>';
-                        rowData.push(formatted);
-                    }
-                    csvData.push(rowData.join(','));
-                    htmlContent += '</tr>';
-                }
-            }
-
-            htmlContent += '</table>';
-            if (!hasData) {
-                htmlContent = '<p>Não existem dados para esse filtro.</p>';
-            }
-            return { html: htmlContent, csv: csvData.join('\n') };
-        }
-
-        function loadFile(indicador, unidade) {
-            if (indicador === 'Selecione' || unidade === '') {
-                document.getElementById('csvContent').innerHTML = '';
-                document.getElementById('downloadButton').style.display = 'none';
-                document.getElementById('faixaEtariaBtns').style.display = 'none';
-                return;
-            }
-            var filePath = indicador + '.csv';
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', filePath, true);
-            xhr.onload = function () {
-                ultimoCSV = xhr.responseText;
-                ultimaUnidade = unidade;
-                
-                if (indicador === 'c7') {
-                    document.getElementById('faixaEtariaBtns').style.display = 'flex';
-                } else {
-                    document.getElementById('faixaEtariaBtns').style.display = 'none';
-                }
-
-                var formattedData = formatTable(ultimoCSV, unidade);
-                document.getElementById('csvContent').innerHTML = formattedData.html;
-
-                var downloadButton = document.getElementById('downloadButton');
-                downloadButton.style.display = 'block';
-                downloadButton.onclick = function () {
-                    var csvContent = formattedData.csv;
-                    var blob = new Blob([csvContent], { type: 'text/csv' });
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = 'dados.csv';
-                    link.click();
-                };
-            };
-            xhr.send();
-        }
-
-        function filtrarFaixa(btn, min, max) {
-    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-            var formattedData = formatTable(ultimoCSV, ultimaUnidade, min, max);
-            document.getElementById('csvContent').innerHTML = formattedData.html;
-        }
-
-        document.getElementById('indicadorSelect').addEventListener('change', function () {
-            var indicador = this.value;
-            var unidade = document.getElementById('unidadeSelect').value;
-            loadFile(indicador, unidade);
-        });
-        function removerFiltro() {
-    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-    var formattedData = formatTable(ultimoCSV, ultimaUnidade);
-    document.getElementById('csvContent').innerHTML = formattedData.html;
-}
-
-document.getElementById('unidadeSelect').addEventListener('change', function () {
-            var indicador = document.getElementById('indicadorSelect').value;
-            var unidade = this.value;
-            loadFile(indicador, unidade);
-        });
-    </script>
+    window.onload = function() { switchModule('APS'); };
+  </script>
 </body>
-
 </html>
