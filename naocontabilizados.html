@@ -5,217 +5,227 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Qualidade do Acompanhamento</title>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #F5F7FA;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #333;
-      transition: background-color 0.3s ease;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
 
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
+/* CONTAINER */
+.container {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
 
-    h1 {
-      font-size: 32px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      color: #003A70;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+/* TÍTULO */
+h1 {
+  font-size: 30px;
+  text-align: center;
+  font-weight: 700;
+  color: #003a70;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
 
-    .select-container {
-      display: flex;
-      gap: 20px;
-      align-items: flex-end;
-      margin-bottom: 20px;
-    }
+/* SELECTS */
+.select-container {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 20px;
+}
 
-    .select-container > div { flex: 1; }
+.select-container > div {
+  flex: 1;
+}
 
-    .select-container label {
-      display: block;
-      font-size: 16px;
-      margin-bottom: 6px;
-      color: #333;
-    }
+label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+  color: #444;
+}
 
-    select {
-      width: 100%;
-      padding: 10px 15px;
-      font-size: 16px;
-      color: #333;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-      cursor: pointer;
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
+select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid #cfd6e2;
+  border-radius: 8px;
+  background: #fafafa;
+  outline: none;
+  transition: 0.25s;
+}
 
-    select:focus {
-      border-color: #007bff;
-      background-color: #e9f5ff;
-    }
+select:hover {
+  border-color: #9cb7d9;
+}
 
-    #downloadButton {
-      background-color: #28a745;
-      color: white;
-      padding: 12px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+select:focus {
+  border-color: #003a70;
+  background: #eef5ff;
+}
 
-    #downloadButton:hover { background-color: #218838; }
+/* BOTÕES DE MÓDULO */
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
 
-    #csvContent {
-      max-height: 600px;
-      overflow: auto;
-      margin-top: 30px;
-    }
+.age-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
-    table {
-      border-collapse: collapse;
-      font-size: 16px;
-      min-width: 1000px;
-      width: 100%;
-    }
+.age-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.2);
+}
 
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-      background-color: #f9f9f9;
-    }
+.age-btn.active {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
 
-    th {
-      position: sticky;
-      top: 0;
-      background-color: #003A70;
-      color: white;
-      z-index: 10;
-    }
+.reset-btn {
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
 
-    td:first-child {
-      position: sticky;
-      left: 0;
-      background-color: #e6f0fa;
-      z-index: 9;
-      font-weight: bold;
-      color: #003A70;
-    }
+/* ÍCONES COMO BOTÕES */
+#downloadContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;  /* ESPAÇAMENTO QUASE ZERO */
+  margin-top: 5px;
+  margin-bottom: 0 !important;
+}
 
-    th:first-child {
-      position: sticky;
-      top: 0;
-      left: 0;
-      background-color: #003A70;
-      color: white;
-      z-index: 11;
-    }
+.btn-img {
+  width: 150px;   /* ajuste fino do tamanho */
+  cursor: pointer;
+  user-select: none;
+}
 
-    tr:nth-child(even) { background-color: #f2f2f2; }
-    tr:hover { background-color: #e9f5ff; }
+/* ÁREA DA TABELA */
+#csvContent {
+  max-height: 650px;
+  overflow: auto;
+  margin-top: 25px;
+  border-radius: 10px;
+  border: 1px solid #d8dfeb;
+}
 
-    .btn-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
+/* TABELA */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 15px;
+}
 
-    .age-btn {
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    }
+table td,
+table th {
+  border-right: 1px solid #d4dbe6;
+  border-bottom: 1px solid #d4dbe6;
+}
 
-    .age-btn:hover {
-      background: linear-gradient(135deg, #0056b3, #003a70);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-    }
+table tr td:last-child,
+table tr th:last-child {
+  border-right: none;
+}
 
-    .age-btn.active {
-      background: linear-gradient(135deg, #28a745, #218838);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-    }
+/* CABEÇALHO */
+th {
+  background-color: #003a70;
+  color: white;
+  font-weight: 600;
+  padding: 14px 10px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 12;
+}
 
-    .reset-btn {
-      background: linear-gradient(135deg, #6c757d, #495057);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    }
+/* primeira coluna fixa */
+th:first-child {
+  left: 0;
+  position: sticky;
+  z-index: 14;
+}
 
-    .reset-btn:hover {
-      background: linear-gradient(135deg, #5a6268, #343a40);
-      transform: scale(0.97);
-    }
+td {
+  padding: 12px 16px;
+  background: #fbfbfb;
+}
 
-    /* --- Tema Odonto --- */
-    body.modo-odonto {
-      background-color: #F5FFF7;
-    }
+td:first-child {
+  left: 0;
+  position: sticky;
+  z-index: 10;
+  font-weight: 700;
+  background: #e6f0fa;
+  color: #003a70;
+}
 
-    body.modo-odonto h1 {
-      color: #2E8B57;
-    }
+tr:nth-child(even) td {
+  background: #f1f5fa;
+}
 
-    body.modo-odonto th {
-      background-color: #2E8B57;
-    }
+/* HOVER sem interferir nas cores das pontuações */
+tr:hover td:not([style*="#e74c3c"]):not([style*="#3498db"]) {
+  background-color: #e8f0ff !important;
+}
 
-    body.modo-odonto td:first-child {
-      background-color: #E4F5E9;
-      color: #2E8B57;
-    }
+/* ------------------------------
+   TEMA ODONTO
+------------------------------ */
 
-    body.modo-odonto .age-btn.active {
-      background: linear-gradient(135deg, #2E8B57, #1E6540);
-    }
+body.modo-odonto {
+  background-color: #F5FFF7 !important;
+}
 
-    body.modo-odonto #downloadButton {
-      background-color: #2E8B57;
-    }
+body.modo-odonto h1 {
+  color: #2E8B57 !important;
+}
 
-    body.modo-odonto #downloadButton:hover {
-      background-color: #1E6540;
-    }
+body.modo-odonto th {
+  background-color: #2E8B57 !important;
+  color: white !important;
+}
 
-    @media (max-width: 768px) {
-      .select-container { flex-direction: column; align-items: flex-start; }
-      select { width: 100%; margin-bottom: 10px; }
-      #downloadButton { width: 100%; margin-top: 20px; }
-      table { font-size: 14px; }
-    }
+body.modo-odonto td:first-child {
+  background-color: #E4F5E9 !important;
+  color: #2E8B57 !important;
+}
+
+@media (max-width: 768px) {
+  .select-container {
+    flex-direction: column;
+  }
+}
   </style>
 </head>
 <body>
@@ -306,7 +316,12 @@
       <button class="reset-btn" onclick="removerFiltro()">Remover Filtro</button>
     </div>
 
-    <button id="downloadButton" style="display:none;">Baixar</button>
+    
+    <div id="downloadContainer" class="download-vertical">
+        <img src="excel.png" id="btnExcel" class="btn-img" style="display:none;">
+        <img src="pdf.png" id="btnPdf" class="btn-img" style="display:none;">
+    </div>
+      
     <div id="csvContent"></div>
   </div>
 
@@ -334,36 +349,57 @@
     let ultimaIdadeColIndex = -1;
 
     function switchModule(modulo) {
-      moduloAtual = modulo;
-      const btnAPS = document.getElementById('btnAPS');
-      const btnOdonto = document.getElementById('btnOdonto');
-      const titulo = document.querySelector('h1');
-      const select = document.getElementById('indicadorSelect');
+  moduloAtual = modulo;
+  const btnAPS = document.getElementById('btnAPS');
+  const btnOdonto = document.getElementById('btnOdonto');
+  const titulo = document.querySelector('h1');
+  const selectIndicador = document.getElementById('indicadorSelect');
+  const selectUnidade = document.getElementById('unidadeSelect');
 
-      btnAPS.classList.toggle('active', modulo === 'APS');
-      btnOdonto.classList.toggle('active', modulo === 'Odonto');
-      select.innerHTML = '<option value="Selecione">Selecione</option>';
+  // Alternar estilo dos botões
+  btnAPS.classList.toggle('active', modulo === 'APS');
+  btnOdonto.classList.toggle('active', modulo === 'Odonto');
 
-      const lista = modulo === 'APS' ? indicadoresAPS : indicadoresOdonto;
-      lista.forEach(i => {
-        const opt = document.createElement('option');
-        opt.value = i.value;
-        opt.textContent = i.text;
-        select.appendChild(opt);
-      });
+  // Resetar os selects
+  selectIndicador.innerHTML = '<option value="Selecione">Selecione</option>';
+  selectUnidade.value = "";   // <-- força limpar a unidade
 
-      if (modulo === 'APS') {
-        titulo.textContent = "Componente Qualidade - APS";
-        document.body.classList.remove('modo-odonto');
-      } else {
-        titulo.textContent = "Componente Qualidade - Odonto";
-        document.body.classList.add('modo-odonto');
-      }
+  // Carregar indicadores corretos
+  const lista = modulo === 'APS' ? indicadoresAPS : indicadoresOdonto;
+  lista.forEach(i => {
+    const opt = document.createElement('option');
+    opt.value = i.value;
+    opt.textContent = i.text;
+    selectIndicador.appendChild(opt);
+  });
 
-      document.getElementById('csvContent').innerHTML = '';
-      document.getElementById('downloadButton').style.display = 'none';
-      document.getElementById('faixaEtariaBtns').style.display = 'none';
-    }
+  // Alterar título e tema
+  if (modulo === 'APS') {
+    titulo.textContent = "Componente Qualidade - APS";
+    document.body.classList.remove('modo-odonto');
+  } else {
+    titulo.textContent = "Componente Qualidade - Odonto";
+    document.body.classList.add('modo-odonto');
+  }
+
+  // ----------------------------
+  // RESETAR ESTADO COMPLETAMENTE
+  // ----------------------------
+
+  // limpa última unidade e csv armazenados
+  ultimoCSV = "";
+  ultimaUnidade = "";
+
+  // esconder botões de download
+  document.getElementById('btnExcel').style.display = 'none';
+  document.getElementById('btnPdf').style.display = 'none';
+
+  // esconder botões de faixa etária
+  document.getElementById('faixaEtariaBtns').style.display = 'none';
+
+  // limpar tabela
+  document.getElementById('csvContent').innerHTML = '';
+}
 
     function formatDateBR(value) {
       const dateRegex = /^\d{4}-\d{2}-\d{2}/;
@@ -375,60 +411,107 @@
     }
 
     function formatTable(data, unidade, minIdade=null, maxIdade=null) {
-      const lines = data.split("\n");
-      let html = '<table>';
-      const header = lines[0].split(",");
-      const equipeIdx = header.indexOf('EQUIPE');
-      ultimaIdadeColIndex = header.indexOf('IDADE');
-      if (equipeIdx === -1 || ultimaIdadeColIndex === -1) return '';
+  const lines = data.split("\n");
+  let html = '<table>';
+  const header = lines[0].split(",");
+  const equipeIdx = header.indexOf('EQUIPE');
+  ultimaIdadeColIndex = header.indexOf('IDADE');
+  if (equipeIdx === -1 || ultimaIdadeColIndex === -1) return '';
 
-      html += '<tr>' + header.map(h => `<th>${h}</th>`).join('') + '</tr>';
+  html += '<tr>' + header.map(h => `<th>${h}</th>`).join('') + '</tr>';
 
-      let csv = [];
-      let hasData = false;
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(",");
-        if (cols.length <= equipeIdx) continue;
-        const equipe = cols[equipeIdx].trim();
-        const idade = parseInt(cols[ultimaIdadeColIndex]);
-        if (equipe === unidade && (minIdade === null || (idade >= minIdade && idade <= maxIdade))) {
-          hasData = true;
-          html += '<tr>' + cols.map(c => `<td>${formatDateBR(c)}</td>`).join('') + '</tr>';
-          csv.push(cols.join(','));
+  let csv = [];
+  let hasData = false;
+
+  // 👉 Identifica automaticamente as colunas de pontuação
+  const colPontuacao = header.map(h =>
+    h.trim().toUpperCase().startsWith("PONTUAÇÃO - ")
+  );
+
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(",");
+    if (cols.length <= equipeIdx) continue;
+
+    const equipe = cols[equipeIdx].trim();
+    const idade = parseInt(cols[ultimaIdadeColIndex]);
+
+    if (equipe === unidade && (minIdade === null || (idade >= minIdade && idade <= maxIdade))) {
+      hasData = true;
+
+      let rowHTML = "<tr>";
+
+      for (let c = 0; c < cols.length; c++) {
+        let rawValue = cols[c].trim();
+        let display = formatDateBR(rawValue);
+        let style = "";
+
+        // 👉 Só aplica cor nas colunas que começam com "PONTUAÇÃO - "
+        if (colPontuacao[c]) {
+          const numero = parseFloat(rawValue.replace(",", "."));
+
+          if (!isNaN(numero)) {
+            if (numero === 0) {
+              style = "background-color:#e74c3c;color:white;font-weight:bold;text-align:center;";
+            } else if (numero > 0) {
+              style = "background-color:#3498db;color:white;font-weight:bold;text-align:center;";
+            }
+          }
         }
-      }
-      html += '</table>';
-      if (!hasData) html = '<p>Não existem dados para esse filtro.</p>';
-      return { html, csv: csv.join('\n') };
-    }
 
-    function loadFile(indicador, unidade) {
-      if (indicador === 'Selecione' || unidade === '') {
-        document.getElementById('csvContent').innerHTML = '';
-        document.getElementById('downloadButton').style.display = 'none';
-        document.getElementById('faixaEtariaBtns').style.display = 'none';
-        return;
+        rowHTML += `<td style="${style}">${display}</td>`;
       }
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', indicador + '.csv', true);
-      xhr.onload = function() {
-        ultimoCSV = xhr.responseText;
-        ultimaUnidade = unidade;
-        document.getElementById('faixaEtariaBtns').style.display = (indicador === 'c7' ? 'flex' : 'none');
-        const formatted = formatTable(ultimoCSV, unidade);
-        document.getElementById('csvContent').innerHTML = formatted.html;
-        const btn = document.getElementById('downloadButton');
-        btn.style.display = 'block';
-        btn.onclick = function() {
-          const blob = new Blob([formatted.csv], { type: 'text/csv' });
-          const link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = 'dados.csv';
-          link.click();
-        };
-      };
-      xhr.send();
+
+      rowHTML += "</tr>";
+
+      html += rowHTML;
+      csv.push(cols.join(","));
     }
+  }
+
+  html += "</table>";
+  if (!hasData) html = "<p>Não existem dados para esse filtro.</p>";
+
+  return { html, csv: lines[0] + "\n" + csv.join("\n") };
+}
+
+function loadFile(indicador, unidade) {
+  if (indicador === 'Selecione' || unidade === '') {
+    document.getElementById('csvContent').innerHTML = '';
+    document.getElementById('btnExcel').style.display = 'none';
+    document.getElementById('btnPdf').style.display = 'none';
+    document.getElementById('faixaEtariaBtns').style.display = 'none';
+    return;
+  }
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', indicador + '.csv', true);
+
+  xhr.onload = function () {
+    ultimoCSV = xhr.responseText;
+    ultimaUnidade = unidade;
+
+    document.getElementById('faixaEtariaBtns').style.display =
+      (indicador === 'c7' ? 'flex' : 'none');
+
+    const formatted = formatTable(ultimoCSV, unidade);
+    document.getElementById('csvContent').innerHTML = formatted.html;
+
+    // MOSTRAR IMAGENS
+    document.getElementById("btnExcel").style.display = "block";
+    document.getElementById("btnPdf").style.display = "block";
+
+    // DOWNLOAD EXCEL
+    document.getElementById("btnExcel").onclick = function () {
+      const blob = new Blob([formatted.csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'dados.csv';
+      link.click();
+    };
+  };
+
+  xhr.send();
+}
 
     function filtrarFaixa(btn, min, max) {
       document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
@@ -452,6 +535,115 @@
     });
 
     window.onload = function() { switchModule('APS'); };
+
+    document.getElementById("btnPdf").onclick = function () {
+    const { jsPDF } = window.jspdf;
+
+    // nome do indicador selecionado
+    const indicadorEl = document.getElementById("indicadorSelect") || document.getElementById("indicador");
+    const nomeIndicador = (indicadorEl && indicadorEl.selectedOptions && indicadorEl.selectedOptions[0]) 
+    ? indicadorEl.selectedOptions[0].text 
+    : "Sem indicador selecionado";
+
+    // usa SEMPRE o último CSV
+    const csvText = formatTable(ultimoCSV, ultimaUnidade).csv.trim();
+    const lines = csvText.split("\n");
+
+    const header = lines[0].split(",");
+    const body = lines.slice(1).map(l => l.split(","));
+
+    const pdf = new jsPDF("landscape", "mm", "a4");
+
+    // largura útil da página
+    const pageWidth = pdf.internal.pageSize.getWidth() - 20;
+    const colCount = header.length;
+    const colWidth = pageWidth / colCount;
+
+    // data/hora para o rodapé
+    const agora = new Date();
+    const dataHora = agora.toLocaleString("pt-BR");
+
+    // ===== Função para gerar o PDF =====
+    function gerarPDF(logoBase64 = null) {
+
+        // título (AGORA COM O NOME DO INDICADOR)
+        pdf.setFontSize(14);
+        pdf.text(`Relatório de Indicador – ${nomeIndicador}`, 14, 14);
+
+        // logo opcional (20x20, mesmo tamanho que você tinha)
+        if (logoBase64) {
+            pdf.addImage(
+                logoBase64,
+                "PNG",
+                pdf.internal.pageSize.getWidth() - 30,
+                5,
+                20,
+                20
+            );
+        }
+
+        pdf.autoTable({
+            head: [header],
+            body: body,
+            startY: 30,
+            theme: "grid",
+
+            styles: {
+                fontSize: 7,
+                cellPadding: 1,
+                overflow: "linebreak"
+            },
+
+            headStyles: {
+                fillColor: [0, 58, 112],
+                textColor: 255,
+                halign: "center",
+                fontStyle: "bold"
+            },
+
+            columnStyles: (() => {
+                const obj = {};
+                for (let i = 0; i < colCount; i++) {
+                    obj[i] = { cellWidth: colWidth };
+                }
+                return obj;
+            })(),
+
+            margin: { top: 30, left: 10, right: 10 },
+
+            didDrawPage: function () {
+                pdf.setFontSize(7);
+                pdf.setTextColor(80);
+                pdf.text(
+                    `iNFO SUS Marília — arquivo gerado em ${dataHora}`,
+                    10,
+                    pdf.internal.pageSize.getHeight() - 5
+                );
+            }
+        });
+
+        pdf.save("dados.pdf");
+    }
+
+    // ===== tentativa de carregar logo =====
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = "logo.png";
+
+    img.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const base64 = canvas.toDataURL("image/png");
+        gerarPDF(base64);
+    };
+
+    img.onerror = function () {
+        gerarPDF(); // sem logo, mas funcional
+    };
+};
   </script>
 </body>
 </html>
