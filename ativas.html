@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestações Ativas</title>
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 30px;
+      text-align: center;
+      font-weight: 700;
+      color: #d63384; 
+      margin-bottom: 25px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .select-container {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+
+    .select-container > div {
+      max-width: 500px;
+      flex: 1;
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: block;
+      color: #444;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 2px solid #cfd6e2;
+      border-radius: 8px;
+      background: #fafafa;
+      outline: none;
+      transition: 0.25s;
+    }
+
+    select:hover {
+      border-color: #9cb7d9;
+    }
+
+    select:focus {
+      border-color: #d63384;
+      background: #fff0f6;
+    }
+
+    #downloadContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      margin-bottom: 0 !important;
+    }
+
+    .btn-img {
+      width: 150px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+
+    .btn-img:hover {
+      transform: scale(1.05);
+    }
+
+    #csvContent {
+      max-height: 650px;
+      overflow: auto;
+      margin-top: 25px;
+      border-radius: 10px;
+      border: 1px solid #d8dfeb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+    }
+
+    table td,
+    table th {
+      border-right: 1px solid #d4dbe6;
+      border-bottom: 1px solid #d4dbe6;
+    }
+
+    table tr td:last-child,
+    table tr th:last-child {
+      border-right: none;
+    }
+
+    th {
+      background-color: #d63384;
+      color: white;
+      font-weight: 600;
+      padding: 14px 10px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      white-space: nowrap;
+    }
+
+    th:first-child {
+      left: 0;
+      position: sticky;
+      z-index: 14;
+    }
+
+    td {
+      padding: 10px 14px;
+      background: #fbfbfb;
+      white-space: nowrap;
+    }
+
+    td:first-child {
+      left: 0;
+      position: sticky;
+      z-index: 10;
+      font-weight: 700;
+      background: #fce4ec;
+      color: #880e4f;
+    }
+
+    tr:nth-child(even) td {
+      background: #fff5f8;
+    }
+
+    tr:hover td:not([style*="background-color"]) {
+      background-color: #ffdce8 !important;
+    }
+
+    @media (max-width: 768px) {
+      .select-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Acompanhamento de Gestações Ativas</h1>
+
+    <div class="select-container">
+      <div>
+        <label for="unidadeSelect">Selecione a Unidade de Saúde:</label>
+        <select id="unidadeSelect">
+          <option value="">Selecione...</option>
+          <option value="EAP CHICO MENDES">EAP CHICO MENDES</option>
+          <option value="EAP PLANALTO">EAP PLANALTO</option>
+          <option value="EAP SANTA ANTONIETA">EAP SANTA ANTONIETA</option>
+          <option value="EAP SAO JUDAS">EAP SAO JUDAS</option>
+          <option value="USF AEROPORTO">USF AEROPORTO</option>
+          <option value="USF ALTANEIRA">USF ALTANEIRA</option>
+          <option value="USF ANIZ BADRA">USF ANIZ BADRA</option>
+          <option value="USF ARGOLO FERRAO">USF ARGOLO FERRAO</option>
+          <option value="USF AVENCAS/ AMADEU AMARAL">USF AVENCAS AMADEU AMARAL</option>
+          <option value="USF BANDEIRANTES">USF BANDEIRANTES</option>
+          <option value="USF BANDEIRANTES II">USF BANDEIRANTES II</option>
+          <option value="USF CAMPO BELO">USF CAMPO BELO</option>
+          <option value="USF COSTA E SILVA">USF COSTA E SILVA</option>
+          <option value="USF COSTA E SILVA II">USF COSTA E SILVA II</option>
+          <option value="USF FIGUERINHA">USF FIGUERINHA</option>
+          <option value="USF JANIO QUADROS">USF JANIO QUADROS</option>
+          <option value="USF JARDIM AMERICA IV">USF JARDIM AMERICA IV</option>
+          <option value="USF JARDIM CAVALARI">USF JARDIM CAVALARI</option>
+          <option value="USF FLAMINGO">USF JARDIM FLAMINGO</option>
+          <option value="USF JARDIM MARACA">USF JARDIM MARACA</option>
+          <option value="USF JARDIM MARACA II">USF JARDIM MARACA II</option>
+          <option value="USF JARDIM MARILIA">USF JARDIM MARILIA</option>
+          <option value="USF JARDIM RENATA">USF JARDIM RENATA</option>
+          <option value="USF JARDIM TERUEL">USF JARDIM TERUEL</option>
+          <option value="USF JK">USF JK</option>
+          <option value="USF JK II">USF JK II</option>
+          <option value="USF JOQUEY CLUBE">USF JOQUEY CLUBE</option>
+          <option value="USF JULIETA">USF JULIETA</option>
+          <option value="USF LACIO">USF LACIO</option>
+          <option value="USF LEONEL DE MOURA BRIZOLA">USF LEONEL DE MOURA BRIZOLA</option>
+          <option value="USF LILIANA">USF LILIANA</option>
+          <option value="USF MARAJO">USF MARAJO</option>
+          <option value="USF NOVO HORIZONTE">USF NOVO HORIZONTE</option>
+          <option value="USF PADRE NOBREGA">USF PADRE NOBREGA</option>
+          <option value="USF PADRE NOBREGA II">USF PADRE NOBREGA II</option>
+          <option value="USF PALMITAL">USF PALMITAL</option>
+          <option value="USF PRIMAVERA/ NACOES/NOVA ALMEIDA">USF PARQUE DAS NACOES</option>
+          <option value="USF PARQUE DOS IPES">USF PARQUE DOS IPES</option>
+          <option value="USF PRIMEIRO DE MAIO">USF PRIMEIRO DE MAIO</option>
+          <option value="USF ROSALIA">USF ROSALIA</option>
+          <option value="USF SANTA ANTONIETA II">USF SANTA ANTONIETA II</option>
+          <option value="USF SANTA ANTONIETA III">USF SANTA ANTONIETA III</option>
+          <option value="USF SANTA AUGUSTA">USF SANTA AUGUSTA</option>
+          <option value="USF SANTA PAULA">USF SANTA PAULA</option>
+          <option value="USF SAO BENTO">USF SAO BENTO</option>
+          <option value="USF SAO MIGUEL">USF SAO MIGUEL</option>
+          <option value="USF SAO MIGUEL II">USF SAO MIGUEL II</option>
+          <option value="USF TOFOLI">USF TOFOLI</option>
+          <option value="USF TRES LAGOS">USF TRES LAGOS</option>
+          <option value="USF VIDA NOVA MARACA">USF VIDA NOVA MARACA</option>
+          <option value="USF VILA BARROS">USF VILA BARROS</option>
+          <option value="USF VILA HIPICA">USF VILA HIPICA</option>
+          <option value="USF VILA NOVA">USF VILA NOVA</option>
+          <option value="USF VILA REAL">USF VILA REAL</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="downloadContainer">
+      <img src="excel.png" id="btnExcel" class="btn-img" style="display:none;" title="Baixar Excel">
+      <img src="pdf.png" id="btnPdf" class="btn-img" style="display:none;" title="Baixar PDF">
+    </div>
+
+    <div id="csvContent"></div>
+  </div>
+
+  <script>
+    let ultimoCSV = "";
+    let ultimaUnidade = "";
+    let headersProcessados = []; 
+    let ultimoCSV_Processado = "";
+
+    function formatDateBR(value) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}/;
+      if (dateRegex.test(value)) {
+        const parts = value.substring(0, 10).split("-");
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return value;
+    }
+
+    function calcularQuadrimestre(dppStr) {
+      if (!dppStr || dppStr.length < 10) return "-";
+      const parts = dppStr.substring(0,10).split('-');
+      if (parts.length !== 3) return "-";
+
+      const dpp = new Date(parts[0], parts[1] - 1, parts[2]);
+      dpp.setDate(dpp.getDate() + 42);
+
+      const mes = dpp.getMonth(); 
+      const ano = dpp.getFullYear();
+
+      let quad = "";
+      if (mes <= 3) quad = "Q1";
+      else if (mes <= 7) quad = "Q2";
+      else quad = "Q3";
+
+      return `${quad}/${ano}`;
+    }
+
+    function formatTable(data, unidade) {
+      const lines = data.split("\n");
+      let html = '<table>';
+      
+      const headerOriginal = lines[0].split(",");
+      const equipeIdx = headerOriginal.indexOf('EQUIPE');
+      const dppIdx = headerOriginal.indexOf('DPP');
+
+      if (equipeIdx === -1) {
+        return { html: '<p style="text-align:center; color:red;">Coluna "EQUIPE" não encontrada.</p>', csv: '' };
+      }
+
+      let headerNovo = [...headerOriginal];
+      if (dppIdx !== -1) {
+        headerNovo.splice(dppIdx + 1, 0, "PREVISÃO IND.");
+      } else {
+        headerNovo.push("PREVISÃO IND.");
+      }
+
+      headersProcessados = headerNovo;
+      html += '<tr>' + headerNovo.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+      let linhasFiltradas = [];
+      let hasData = false;
+
+      for (let i = 1; i < lines.length; i++) {
+        const lineStr = lines[i].trim();
+        if (!lineStr) continue;
+
+        let cols = lineStr.split(",");
+        if (cols.length < equipeIdx) continue;
+        const equipe = cols[equipeIdx].trim();
+
+        if (equipe === unidade) {
+          hasData = true;
+
+          let valorPrevisao = "-";
+          if (dppIdx !== -1 && cols[dppIdx]) {
+            valorPrevisao = calcularQuadrimestre(cols[dppIdx].trim());
+          }
+
+          if (dppIdx !== -1) {
+            cols.splice(dppIdx + 1, 0, valorPrevisao);
+          } else {
+            cols.push(valorPrevisao);
+          }
+
+          linhasFiltradas.push(cols);
+
+          let rowHTML = "<tr>";
+          for (let c = 0; c < cols.length; c++) {
+            let rawValue = cols[c].trim();
+            let display = formatDateBR(rawValue);
+            let style = "";
+            
+            const headerName = headerNovo[c].trim().toUpperCase();
+
+            // --- LÓGICA DE CORES ---
+            
+            // 1. PREVISÃO (Roxo)
+            if (headerName === "PREVISÃO IND.") {
+               style = "background-color:#e1bee7; color:#4a148c; font-weight:bold; text-align:center;";
+            }
+            // 2. COLUNA ESCORE TOTAL / FINAL (AQUI ESTAVA O ERRO)
+            // Agora verifica se o nome é exatamente "ESCORE" ou "ESCORE_TOTAL" ou "ESCORE TOTAL"
+            else if (headerName === "ESCORE" || headerName === "ESCORE TOTAL" || headerName === "ESCORE_TOTAL") {
+                const numero = parseFloat(rawValue.replace(",", "."));
+                if (!isNaN(numero)) {
+                    style = "font-weight:bold; text-align:center; ";
+                    if (numero <= 25) {
+                        style += "background-color:#d84315; color:white;"; // Laranja Escuro
+                    } else if (numero <= 50) {
+                        style += "background-color:#ffeb3b; color:#333;"; // Amarelo
+                    } else if (numero <= 75) {
+                        style += "background-color:#2e7d32; color:white;"; // Verde
+                    } else {
+                        style += "background-color:#1565c0; color:white;"; // Azul Escuro
+                    }
+                }
+            }
+            // 3. DEMAIS PONTUAÇÕES (Vermelho/Azul)
+            // Aplica para qualquer outra coluna que tenha "ESCORE" ou "PONTUAÇÃO" no nome
+            else if (headerName.includes("ESCORE") || headerName.includes("PONTUAÇÃO")) {
+                const numero = parseFloat(rawValue.replace(",", "."));
+                if (!isNaN(numero)) {
+                    if (numero === 0) {
+                        style = "background-color:#e74c3c; color:white; font-weight:bold; text-align:center;";
+                    } else if (numero > 0) {
+                        style = "background-color:#3498db; color:white; font-weight:bold; text-align:center;";
+                    }
+                }
+            }
+
+            rowHTML += `<td style="${style}">${display}</td>`;
+          }
+          rowHTML += "</tr>";
+          html += rowHTML;
+        }
+      }
+
+      html += "</table>";
+      
+      let csvExport = headersProcessados.join(",") + "\n";
+      linhasFiltradas.forEach(row => {
+        csvExport += row.join(",") + "\n";
+      });
+
+      if (!hasData) {
+        html = `<p style="text-align:center; margin-top:20px; font-size:18px; color:#666;">
+                  Nenhuma gestante ativa encontrada para: <strong>${unidade}</strong>.
+                </p>`;
+      }
+
+      return { html, csv: csvExport };
+    }
+
+    function loadFile(unidade) {
+      if (unidade === '') {
+        document.getElementById('csvContent').innerHTML = '';
+        document.getElementById('btnExcel').style.display = 'none';
+        document.getElementById('btnPdf').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('csvContent').innerHTML = '<p style="text-align:center;">Carregando dados...</p>';
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'ativas.csv', true);
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          ultimoCSV = xhr.responseText;
+          ultimaUnidade = unidade;
+
+          const formatted = formatTable(ultimoCSV, unidade);
+          document.getElementById('csvContent').innerHTML = formatted.html;
+          
+          ultimoCSV_Processado = formatted.csv; 
+
+          const temDados = formatted.csv.trim().split('\n').length > 1;
+          document.getElementById("btnExcel").style.display = temDados ? "block" : "none";
+          document.getElementById("btnPdf").style.display = temDados ? "block" : "none";
+
+        } else {
+          document.getElementById('csvContent').innerHTML = 
+            `<p style="text-align:center; color:red;">Erro ao carregar "ativas.csv".</p>`;
+        }
+      };
+
+      xhr.onerror = function() {
+        document.getElementById('csvContent').innerHTML = '<p style="text-align:center; color:red;">Falha na conexão.</p>';
+      };
+
+      xhr.send();
+    }
+
+    document.getElementById('unidadeSelect').addEventListener('change', function () {
+      loadFile(this.value);
+    });
+
+    document.getElementById("btnExcel").onclick = function () {
+      const blob = new Blob([ultimoCSV_Processado], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `Gestações_Ativas_${ultimaUnidade.replace(/\s+/g, '_')}.csv`;
+      link.click();
+    };
+
+    document.getElementById("btnPdf").onclick = function () {
+      const { jsPDF } = window.jspdf;
+      const nomeRelatorio = `Gestações Ativas - ${ultimaUnidade}`;
+      
+      const csvText = ultimoCSV_Processado.trim();
+      const lines = csvText.split("\n");
+
+      if (lines.length < 2) {
+        alert("Sem dados para gerar PDF.");
+        return;
+      }
+
+      const header = lines[0].split(",");
+      const body = lines.slice(1).map(l => l.split(","));
+
+      const formatoPapel = header.length > 20 ? "a3" : "a4";
+      const pdf = new jsPDF("landscape", "mm", formatoPapel);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const agora = new Date();
+      const dataHora = agora.toLocaleString("pt-BR");
+
+      function gerarPDF(logoBase64 = null) {
+        pdf.setFontSize(14);
+        pdf.setTextColor(214, 51, 132);
+        pdf.text(nomeRelatorio, 14, 15);
+
+        if (logoBase64) {
+          pdf.addImage(logoBase64, "PNG", pageWidth - 30, 5, 20, 20);
+        }
+
+        pdf.autoTable({
+          head: [header],
+          body: body,
+          startY: 25,
+          theme: "grid",
+          styles: {
+            fontSize: 6,
+            cellPadding: 1,
+            valign: 'middle',
+            halign: 'center',
+            overflow: 'linebreak'
+          },
+          headStyles: {
+            fillColor: [214, 51, 132],
+            textColor: 255,
+            fontStyle: "bold",
+            fontSize: 5.5,
+            valign: 'middle'
+          },
+          columnStyles: {
+            0: { cellWidth: 'auto', fontStyle: 'bold' },
+          },
+          margin: { top: 25, left: 5, right: 5 },
+          didDrawPage: function (data) {
+            pdf.setFontSize(6);
+            pdf.setTextColor(100);
+            pdf.text(
+              `iNFO SUS Marília — arquivo gerado em ${dataHora} | Página ${pdf.internal.getNumberOfPages()}`,
+              10,
+              pdf.internal.pageSize.getHeight() - 5
+            );
+          }
+        });
+
+        pdf.save(`Relatorio_Gestantes_${ultimaUnidade.replace(/\s+/g, '_')}.pdf`);
+      }
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = "logo.png";
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const base64 = canvas.toDataURL("image/png");
+        gerarPDF(base64);
+      };
+      img.onerror = function () {
+        gerarPDF(null);
+      };
+    };
+  </script>
+</body>
+</html>

@@ -4,322 +4,347 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Qualidade do Acompanhamento</title>
+  
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
   <style>
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f4f6f9;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-}
+    :root {
+      --primary-color: #0277bd; /* Azul APS padrão */
+      --primary-light: #e1f5fe;
+      --text-color: #37474f;
+      --border-radius: 12px;
+    }
 
-/* CONTAINER */
-.container {
-  max-width: 1400px;
-  margin: 30px auto;
-  padding: 30px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
+    /* Tema Odonto */
+    body.modo-odonto {
+      --primary-color: #2e7d32; /* Verde */
+      --primary-light: #e8f5e9;
+    }
 
-/* TÍTULO */
-h1 {
-  font-size: 30px;
-  text-align: center;
-  font-weight: 700;
-  color: #003a70;
-  margin-bottom: 25px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      font-family: "Segoe UI", "Roboto", Helvetica, Arial, sans-serif;
+      color: var(--text-color);
+      transition: background-color 0.3s;
+    }
 
-/* SELECTS */
-.select-container {
-  display: flex;
-  gap: 25px;
-  margin-bottom: 20px;
-}
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
 
-.select-container > div {
-  flex: 1;
-}
+    /* ABAS DE MÓDULO */
+    .tabs-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e0e0e0;
+    }
 
-label {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  display: block;
-  color: #444;
-}
+    .tab-btn {
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #757575;
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: 0.3s;
+    }
 
-select {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 15px;
-  border: 2px solid #cfd6e2;
-  border-radius: 8px;
-  background: #fafafa;
-  outline: none;
-  transition: 0.25s;
-}
+    .tab-btn.active {
+      color: var(--primary-color);
+    }
 
-select:hover {
-  border-color: #9cb7d9;
-}
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary-color);
+      border-radius: 3px 3px 0 0;
+    }
 
-select:focus {
-  border-color: #003a70;
-  background: #eef5ff;
-}
+    h1 {
+      font-size: 26px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-/* BOTÕES DE MÓDULO */
-.btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
+    /* SELECTS */
+    .select-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
 
-.age-btn {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
-  font-size: 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.25s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+    .select-group {
+      flex: 1;
+    }
 
-.age-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.2);
-}
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+      color: #546e7a;
+    }
 
-.age-btn.active {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-}
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      background: #fafafa;
+      outline: none;
+      transition: 0.2s;
+      color: #333;
+    }
 
-.reset-btn {
-  background: linear-gradient(135deg, #6c757d, #495057);
-}
+    select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
 
-/* ÍCONES COMO BOTÕES */
-#downloadContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;  /* ESPAÇAMENTO QUASE ZERO */
-  margin-top: 5px;
-  margin-bottom: 0 !important;
-}
+    /* FILTROS DE FAIXA ETÁRIA */
+    .filters-wrapper {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      border: 1px dashed #cfd8dc;
+    }
 
-.btn-img {
-  width: 150px;   /* ajuste fino do tamanho */
-  cursor: pointer;
-  user-select: none;
-}
+    .filter-chip {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 20px;
+      border: 1px solid #b0bec5;
+      background-color: white;
+      color: #546e7a;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
 
-/* ÁREA DA TABELA */
-#csvContent {
-  max-height: 650px;
-  overflow: auto;
-  margin-top: 25px;
-  border-radius: 10px;
-  border: 1px solid #d8dfeb;
-}
+    .filter-chip:hover {
+      background-color: #eceff1;
+      transform: translateY(-1px);
+    }
 
-/* TABELA */
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 15px;
-}
+    .filter-chip.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
 
-table td,
-table th {
-  border-right: 1px solid #d4dbe6;
-  border-bottom: 1px solid #d4dbe6;
-}
+    .filter-chip.reset {
+      border-color: #ef5350;
+      color: #ef5350;
+    }
+    .filter-chip.reset:hover {
+      background-color: #ffebee;
+    }
 
-table tr td:last-child,
-table tr th:last-child {
-  border-right: none;
-}
+    /* DOWNLOAD BUTTONS */
+    #downloadContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
 
-/* CABEÇALHO */
-th {
-  background-color: #003a70;
-  color: white;
-  font-weight: 600;
-  padding: 14px 10px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 12;
-}
+    .btn-img {
+      width: 140px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-img:hover { transform: scale(1.05); }
 
-/* primeira coluna fixa */
-th:first-child {
-  left: 0;
-  position: sticky;
-  z-index: 14;
-}
+    /* TABELA */
+    #csvContent {
+      max-height: 650px;
+      overflow: auto;
+      margin-top: 25px;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background: white;
+    }
 
-td {
-  padding: 12px 16px;
-  background: #fbfbfb;
-}
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+      min-width: 1000px;
+    }
 
-td:first-child {
-  left: 0;
-  position: sticky;
-  z-index: 10;
-  font-weight: 700;
-  background: #e6f0fa;
-  color: #003a70;
-}
+    th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 600;
+      padding: 14px 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      white-space: nowrap;
+    }
 
-tr:nth-child(even) td {
-  background: #f1f5fa;
-}
+    th:first-child {
+      left: 0;
+      z-index: 25;
+    }
 
-/* HOVER sem interferir nas cores das pontuações */
-tr:hover td:not([style*="#e74c3c"]):not([style*="#3498db"]) {
-  background-color: #e8f0ff !important;
-}
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #eee;
+      border-right: 1px solid #eee;
+      white-space: nowrap;
+      color: #455a64;
+    }
 
-/* ------------------------------
-   TEMA ODONTO
------------------------------- */
+    td:first-child {
+      position: sticky;
+      left: 0;
+      background-color: var(--primary-light);
+      font-weight: 700;
+      color: var(--primary-color);
+      z-index: 15;
+      border-right: 2px solid rgba(0,0,0,0.05);
+    }
 
-body.modo-odonto {
-  background-color: #F5FFF7 !important;
-}
+    tr:nth-child(even) td {
+      background-color: #fafafa;
+    }
 
-body.modo-odonto h1 {
-  color: #2E8B57 !important;
-}
+    /* Hover genérico */
+    tr:hover td:not([style*="background-color"]) {
+      background-color: #f1f8e9 !important;
+      color: #000;
+    }
+    body:not(.modo-odonto) tr:hover td:not([style*="background-color"]) {
+      background-color: #e3f2fd !important;
+    }
 
-body.modo-odonto th {
-  background-color: #2E8B57 !important;
-  color: white !important;
-}
-
-body.modo-odonto td:first-child {
-  background-color: #E4F5E9 !important;
-  color: #2E8B57 !important;
-}
-
-@media (max-width: 768px) {
-  .select-container {
-    flex-direction: column;
-  }
-}
+    @media (max-width: 768px) {
+      .select-container { flex-direction: column; gap: 10px; }
+      .filter-chip { flex: 1 1 auto; text-align: center; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Componente Qualidade - APS</h1>
-
-    <!-- Botões de módulo -->
-    <div class="btn-container" style="margin-bottom: 30px;">
-      <button class="age-btn active" id="btnAPS" onclick="switchModule('APS')">APS</button>
-      <button class="age-btn" id="btnOdonto" onclick="switchModule('Odonto')">Odonto</button>
+    
+    <div class="tabs-container">
+      <button class="tab-btn active" id="btnAPS" onclick="switchModule('APS')">APS</button>
+      <button class="tab-btn" id="btnOdonto" onclick="switchModule('Odonto')">Odontologia</button>
     </div>
+
+    <h1 id="tituloPagina">Indicadores de Qualidade - APS</h1>
 
     <div class="select-container">
-      <div>
-        <label for="indicadorSelect">Indicador:</label>
+      <div class="select-group">
+        <label for="indicadorSelect">Selecione o Indicador:</label>
         <select id="indicadorSelect">
-          <option value="Selecione">Selecione</option>
+          <option value="Selecione">Selecione...</option>
         </select>
       </div>
-      <div>
-        <label for="unidadeSelect">Unidade:</label>
+      <div class="select-group">
+        <label for="unidadeSelect">Selecione a Unidade:</label>
         <select id="unidadeSelect">
-          <option value="">Selecione</option>
-          <!-- Unidades -->
+          <option value="">Selecione...</option>
           <option value="EAP CHICO MENDES">EAP CHICO MENDES</option>
-                    <option value="EAP PLANALTO">EAP PLANALTO</option>
-                    <option value="EAP SANTA ANTONIETA">EAP SANTA ANTONIETA</option>
-                    <option value="EAP SAO JUDAS">EAP SAO JUDAS</option>
-                    <option value="USF AEROPORTO">USF AEROPORTO</option>
-                    <option value="USF ALTANEIRA">USF ALTANEIRA</option>
-                    <option value="USF ANIZ BADRA">USF ANIZ BADRA</option>
-                    <option value="USF ARGOLO FERRAO">USF ARGOLO FERRAO</option>
-                    <option value="USF AVENCAS/ AMADEU AMARAL">USF AVENCAS AMADEU AMARAL</option>
-                    <option value="USF BANDEIRANTES">USF BANDEIRANTES</option>
-                    <option value="USF BANDEIRANTES II">USF BANDEIRANTES II</option>
-                    <option value="USF CAMPO BELO">USF CAMPO BELO</option>
-                    <option value="USF COSTA E SILVA">USF COSTA E SILVA</option>
-                    <option value="USF COSTA E SILVA II">USF COSTA E SILVA II</option>
-                    <option value="USF FIGUERINHA">USF FIGUERINHA</option>
-                    <option value="USF JANIO QUADROS">USF JANIO QUADROS</option>
-                    <option value="USF JARDIM AMERICA IV">USF JARDIM AMERICA IV</option>
-                    <option value="USF JARDIM CAVALARI">USF JARDIM CAVALARI</option>
-                    <option value="USF FLAMINGO">USF JARDIM FLAMINGO</option>
-                    <option value="USF JARDIM MARACA">USF JARDIM MARACA</option>
-                    <option value="USF JARDIM MARACA II">USF JARDIM MARACA II</option>
-                    <option value="USF JARDIM MARILIA">USF JARDIM MARILIA</option>
-                    <option value="USF JARDIM RENATA">USF JARDIM RENATA</option>
-                    <option value="USF JARDIM TERUEL">USF JARDIM TERUEL</option>
-                    <option value="USF JK">USF JK</option>
-                    <option value="USF JK II">USF JK II</option>
-                    <option value="USF JOQUEY CLUBE">USF JOQUEY CLUBE</option>
-                    <option value="USF JULIETA">USF JULIETA</option>
-                    <option value="USF LACIO">USF LACIO</option>
-                    <option value="USF LEONEL DE MOURA BRIZOLA">USF LEONEL DE MOURA BRIZOLA</option>
-                    <option value="USF LILIANA">USF LILIANA</option>
-                    <option value="USF MARAJO">USF MARAJO</option>
-                    <option value="USF NOVO HORIZONTE">USF NOVO HORIZONTE</option>
-                    <option value="USF PADRE NOBREGA">USF PADRE NOBREGA</option>
-                    <option value="USF PADRE NOBREGA II">USF PADRE NOBREGA II</option>
-                    <option value="USF PALMITAL">USF PALMITAL</option>
-                    <option value="USF PRIMAVERA/ NACOES/NOVA ALMEIDA">USF PARQUE DAS NACOES</option>
-                    <option value="USF PARQUE DOS IPES">USF PARQUE DOS IPES</option>
-                    <option value="USF PRIMEIRO DE MAIO">USF PRIMEIRO DE MAIO</option>
-                    <option value="USF ROSALIA">USF ROSALIA</option>
-                    <option value="USF SANTA ANTONIETA II">USF SANTA ANTONIETA II</option>
-                    <option value="USF SANTA ANTONIETA III">USF SANTA ANTONIETA III</option>
-                    <option value="USF SANTA AUGUSTA">USF SANTA AUGUSTA</option>
-                    <option value="USF SANTA PAULA">USF SANTA PAULA</option>
-                    <option value="USF SAO BENTO">USF SAO BENTO</option>
-                    <option value="USF SAO MIGUEL">USF SAO MIGUEL</option>
-                    <option value="USF SAO MIGUEL II">USF SAO MIGUEL II</option>
-                    <option value="USF TOFOLI">USF TOFOLI</option>
-                    <option value="USF TRES LAGOS">USF TRES LAGOS</option>
-                    <option value="USF VIDA NOVA MARACA">USF VIDA NOVA MARACA</option>
-                    <option value="USF VILA BARROS">USF VILA BARROS</option>
-                    <option value="USF VILA HIPICA">USF VILA HIPICA</option>
-                    <option value="USF VILA NOVA">USF VILA NOVA</option>
-                    <option value="USF VILA REAL">USF VILA REAL</option>
+          <option value="EAP PLANALTO">EAP PLANALTO</option>
+          <option value="EAP SANTA ANTONIETA">EAP SANTA ANTONIETA</option>
+          <option value="EAP SAO JUDAS">EAP SAO JUDAS</option>
+          <option value="USF AEROPORTO">USF AEROPORTO</option>
+          <option value="USF ALTANEIRA">USF ALTANEIRA</option>
+          <option value="USF ANIZ BADRA">USF ANIZ BADRA</option>
+          <option value="USF ARGOLO FERRAO">USF ARGOLO FERRAO</option>
+          <option value="USF AVENCAS/ AMADEU AMARAL">USF AVENCAS AMADEU AMARAL</option>
+          <option value="USF BANDEIRANTES">USF BANDEIRANTES</option>
+          <option value="USF BANDEIRANTES II">USF BANDEIRANTES II</option>
+          <option value="USF CAMPO BELO">USF CAMPO BELO</option>
+          <option value="USF COSTA E SILVA">USF COSTA E SILVA</option>
+          <option value="USF COSTA E SILVA II">USF COSTA E SILVA II</option>
+          <option value="USF FIGUERINHA">USF FIGUERINHA</option>
+          <option value="USF JANIO QUADROS">USF JANIO QUADROS</option>
+          <option value="USF JARDIM AMERICA IV">USF JARDIM AMERICA IV</option>
+          <option value="USF JARDIM CAVALARI">USF JARDIM CAVALARI</option>
+          <option value="USF FLAMINGO">USF JARDIM FLAMINGO</option>
+          <option value="USF JARDIM MARACA">USF JARDIM MARACA</option>
+          <option value="USF JARDIM MARACA II">USF JARDIM MARACA II</option>
+          <option value="USF JARDIM MARILIA">USF JARDIM MARILIA</option>
+          <option value="USF JARDIM RENATA">USF JARDIM RENATA</option>
+          <option value="USF JARDIM TERUEL">USF JARDIM TERUEL</option>
+          <option value="USF JK">USF JK</option>
+          <option value="USF JK II">USF JK II</option>
+          <option value="USF JOQUEY CLUBE">USF JOQUEY CLUBE</option>
+          <option value="USF JULIETA">USF JULIETA</option>
+          <option value="USF LACIO">USF LACIO</option>
+          <option value="USF LEONEL DE MOURA BRIZOLA">USF LEONEL DE MOURA BRIZOLA</option>
+          <option value="USF LILIANA">USF LILIANA</option>
+          <option value="USF MARAJO">USF MARAJO</option>
+          <option value="USF NOVO HORIZONTE">USF NOVO HORIZONTE</option>
+          <option value="USF PADRE NOBREGA">USF PADRE NOBREGA</option>
+          <option value="USF PADRE NOBREGA II">USF PADRE NOBREGA II</option>
+          <option value="USF PALMITAL">USF PALMITAL</option>
+          <option value="USF PRIMAVERA/ NACOES/NOVA ALMEIDA">USF PARQUE DAS NACOES</option>
+          <option value="USF PARQUE DOS IPES">USF PARQUE DOS IPES</option>
+          <option value="USF PRIMEIRO DE MAIO">USF PRIMEIRO DE MAIO</option>
+          <option value="USF ROSALIA">USF ROSALIA</option>
+          <option value="USF SANTA ANTONIETA II">USF SANTA ANTONIETA II</option>
+          <option value="USF SANTA ANTONIETA III">USF SANTA ANTONIETA III</option>
+          <option value="USF SANTA AUGUSTA">USF SANTA AUGUSTA</option>
+          <option value="USF SANTA PAULA">USF SANTA PAULA</option>
+          <option value="USF SAO BENTO">USF SAO BENTO</option>
+          <option value="USF SAO MIGUEL">USF SAO MIGUEL</option>
+          <option value="USF SAO MIGUEL II">USF SAO MIGUEL II</option>
+          <option value="USF TOFOLI">USF TOFOLI</option>
+          <option value="USF TRES LAGOS">USF TRES LAGOS</option>
+          <option value="USF VIDA NOVA MARACA">USF VIDA NOVA MARACA</option>
+          <option value="USF VILA BARROS">USF VILA BARROS</option>
+          <option value="USF VILA HIPICA">USF VILA HIPICA</option>
+          <option value="USF VILA NOVA">USF VILA NOVA</option>
+          <option value="USF VILA REAL">USF VILA REAL</option>
         </select>
       </div>
     </div>
 
-    <div id="faixaEtariaBtns" style="display:none;" class="btn-container">
-      <button class="age-btn" onclick="filtrarFaixa(this,25,64)">Citopatológico (25 a 64)</button>
-      <button class="age-btn" onclick="filtrarFaixa(this,9,14)">Vacina HPV (9 a 14)</button>
-      <button class="age-btn" onclick="filtrarFaixa(this,14,69)">Atenção Sexualidade (14 a 69)</button>
-      <button class="age-btn" onclick="filtrarFaixa(this,50,69)">Mamografia (50 a 69)</button>
-      <button class="reset-btn" onclick="removerFiltro()">Remover Filtro</button>
+    <div id="faixaEtariaBtns" class="filters-wrapper">
+      <div class="filter-chip" onclick="filtrarFaixa(this,25,64)">Citopatológico (25-64)</div>
+      <div class="filter-chip" onclick="filtrarFaixa(this,9,14)">Vacina HPV (9-14)</div>
+      <div class="filter-chip" onclick="filtrarFaixa(this,14,69)">Sexualidade (14-69)</div>
+      <div class="filter-chip" onclick="filtrarFaixa(this,50,69)">Mamografia (50-69)</div>
+      <div class="filter-chip reset" onclick="removerFiltro()">Limpar Filtros</div>
     </div>
-
     
-    <div id="downloadContainer" class="download-vertical">
-        <img src="excel.png" id="btnExcel" class="btn-img" style="display:none;">
-        <img src="pdf.png" id="btnPdf" class="btn-img" style="display:none;">
+    <div id="downloadContainer">
+        <img src="excel.png" id="btnExcel" class="btn-img" style="display:none;" title="Baixar Excel">
+        <img src="pdf.png" id="btnPdf" class="btn-img" style="display:none;" title="Baixar PDF">
     </div>
       
     <div id="csvContent"></div>
@@ -348,59 +373,6 @@ body.modo-odonto td:first-child {
     let ultimaUnidade = "";
     let ultimaIdadeColIndex = -1;
 
-    function switchModule(modulo) {
-  moduloAtual = modulo;
-  const btnAPS = document.getElementById('btnAPS');
-  const btnOdonto = document.getElementById('btnOdonto');
-  const titulo = document.querySelector('h1');
-  const selectIndicador = document.getElementById('indicadorSelect');
-  const selectUnidade = document.getElementById('unidadeSelect');
-
-  // Alternar estilo dos botões
-  btnAPS.classList.toggle('active', modulo === 'APS');
-  btnOdonto.classList.toggle('active', modulo === 'Odonto');
-
-  // Resetar os selects
-  selectIndicador.innerHTML = '<option value="Selecione">Selecione</option>';
-  selectUnidade.value = "";   // <-- força limpar a unidade
-
-  // Carregar indicadores corretos
-  const lista = modulo === 'APS' ? indicadoresAPS : indicadoresOdonto;
-  lista.forEach(i => {
-    const opt = document.createElement('option');
-    opt.value = i.value;
-    opt.textContent = i.text;
-    selectIndicador.appendChild(opt);
-  });
-
-  // Alterar título e tema
-  if (modulo === 'APS') {
-    titulo.textContent = "Componente Qualidade - APS";
-    document.body.classList.remove('modo-odonto');
-  } else {
-    titulo.textContent = "Componente Qualidade - Odonto";
-    document.body.classList.add('modo-odonto');
-  }
-
-  // ----------------------------
-  // RESETAR ESTADO COMPLETAMENTE
-  // ----------------------------
-
-  // limpa última unidade e csv armazenados
-  ultimoCSV = "";
-  ultimaUnidade = "";
-
-  // esconder botões de download
-  document.getElementById('btnExcel').style.display = 'none';
-  document.getElementById('btnPdf').style.display = 'none';
-
-  // esconder botões de faixa etária
-  document.getElementById('faixaEtariaBtns').style.display = 'none';
-
-  // limpar tabela
-  document.getElementById('csvContent').innerHTML = '';
-}
-
     function formatDateBR(value) {
       const dateRegex = /^\d{4}-\d{2}-\d{2}/;
       if (dateRegex.test(value)) {
@@ -410,118 +382,163 @@ body.modo-odonto td:first-child {
       return value;
     }
 
-    function formatTable(data, unidade, minIdade=null, maxIdade=null) {
-  const lines = data.split("\n");
-  let html = '<table>';
-  const header = lines[0].split(",");
-  const equipeIdx = header.indexOf('EQUIPE');
-  ultimaIdadeColIndex = header.indexOf('IDADE');
-  if (equipeIdx === -1 || ultimaIdadeColIndex === -1) return '';
-
-  html += '<tr>' + header.map(h => `<th>${h}</th>`).join('') + '</tr>';
-
-  let csv = [];
-  let hasData = false;
-
-  // 👉 Identifica automaticamente as colunas de pontuação
-  const colPontuacao = header.map(h =>
-    h.trim().toUpperCase().startsWith("PONTUAÇÃO - ")
-  );
-
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(",");
-    if (cols.length <= equipeIdx) continue;
-
-    const equipe = cols[equipeIdx].trim();
-    const idade = parseInt(cols[ultimaIdadeColIndex]);
-
-    if (equipe === unidade && (minIdade === null || (idade >= minIdade && idade <= maxIdade))) {
-      hasData = true;
-
-      let rowHTML = "<tr>";
-
-      for (let c = 0; c < cols.length; c++) {
-        let rawValue = cols[c].trim();
-        let display = formatDateBR(rawValue);
-        let style = "";
-
-        // 👉 Só aplica cor nas colunas que começam com "PONTUAÇÃO - "
-        if (colPontuacao[c]) {
-          const numero = parseFloat(rawValue.replace(",", "."));
-
-          if (!isNaN(numero)) {
-            if (numero === 0) {
-              style = "background-color:#e74c3c;color:white;font-weight:bold;text-align:center;";
-            } else if (numero > 0) {
-              style = "background-color:#3498db;color:white;font-weight:bold;text-align:center;";
-            }
-          }
-        }
-
-        rowHTML += `<td style="${style}">${display}</td>`;
+    function switchModule(modulo) {
+      moduloAtual = modulo;
+      document.getElementById('btnAPS').classList.toggle('active', modulo === 'APS');
+      document.getElementById('btnOdonto').classList.toggle('active', modulo === 'Odonto');
+      
+      if (modulo === 'Odonto') {
+        document.body.classList.add('modo-odonto');
+        document.querySelector('h1').textContent = "Indicadores de Qualidade - Odontologia";
+      } else {
+        document.body.classList.remove('modo-odonto');
+        document.querySelector('h1').textContent = "Indicadores de Qualidade - APS";
       }
 
-      rowHTML += "</tr>";
+      const selectIndicador = document.getElementById('indicadorSelect');
+      selectIndicador.innerHTML = '<option value="Selecione">Selecione...</option>';
+      document.getElementById('unidadeSelect').value = "";
 
-      html += rowHTML;
-      csv.push(cols.join(","));
+      const lista = modulo === 'APS' ? indicadoresAPS : indicadoresOdonto;
+      lista.forEach(i => {
+        const opt = document.createElement('option');
+        opt.value = i.value;
+        opt.textContent = i.text;
+        selectIndicador.appendChild(opt);
+      });
+
+      ultimoCSV = "";
+      ultimaUnidade = "";
+      document.getElementById('csvContent').innerHTML = '';
+      document.getElementById('downloadContainer').querySelectorAll('img').forEach(img => img.style.display = 'none');
+      document.getElementById('faixaEtariaBtns').style.display = 'none';
     }
-  }
 
-  html += "</table>";
-  if (!hasData) html = "<p>Não existem dados para esse filtro.</p>";
+    function formatTable(data, unidade, minIdade=null, maxIdade=null) {
+      const lines = data.split("\n");
+      let html = '<table>';
+      const header = lines[0].split(",");
+      const equipeIdx = header.indexOf('EQUIPE');
+      ultimaIdadeColIndex = header.indexOf('IDADE');
+      
+      if (equipeIdx === -1) return {html: '<p style="text-align:center; padding:20px;">Arquivo inválido.</p>', csv: ''};
 
-  return { html, csv: lines[0] + "\n" + csv.join("\n") };
-}
+      html += '<tr>' + header.map(h => `<th>${h}</th>`).join('') + '</tr>';
 
-function loadFile(indicador, unidade) {
-  if (indicador === 'Selecione' || unidade === '') {
-    document.getElementById('csvContent').innerHTML = '';
-    document.getElementById('btnExcel').style.display = 'none';
-    document.getElementById('btnPdf').style.display = 'none';
-    document.getElementById('faixaEtariaBtns').style.display = 'none';
-    return;
-  }
+      let csv = [];
+      let hasData = false;
 
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', indicador + '.csv', true);
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",");
+        if (cols.length <= equipeIdx) continue;
 
-  xhr.onload = function () {
-    ultimoCSV = xhr.responseText;
-    ultimaUnidade = unidade;
+        const equipe = cols[equipeIdx].trim();
+        let idade = -1;
+        if (ultimaIdadeColIndex !== -1) {
+           idade = parseInt(cols[ultimaIdadeColIndex]);
+        }
 
-    document.getElementById('faixaEtariaBtns').style.display =
-      (indicador === 'c7' ? 'flex' : 'none');
+        if (equipe === unidade && (minIdade === null || (idade >= minIdade && idade <= maxIdade))) {
+          hasData = true;
+          let rowHTML = "<tr>";
 
-    const formatted = formatTable(ultimoCSV, unidade);
-    document.getElementById('csvContent').innerHTML = formatted.html;
+          for (let c = 0; c < cols.length; c++) {
+            let rawValue = cols[c].trim();
+            let display = formatDateBR(rawValue);
+            let style = "";
 
-    // MOSTRAR IMAGENS
-    document.getElementById("btnExcel").style.display = "block";
-    document.getElementById("btnPdf").style.display = "block";
+            const headerName = header[c].trim().toUpperCase();
 
-    // DOWNLOAD EXCEL
-    document.getElementById("btnExcel").onclick = function () {
-      const blob = new Blob([formatted.csv], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'dados.csv';
-      link.click();
-    };
-  };
+            // --- REGRAS DE CORES --- //
 
-  xhr.send();
-}
+            // 1. COLUNA ESCORE (Gradiente)
+            if (headerName === "ESCORE" || headerName === "ESCORE TOTAL" || headerName === "ESCORE_TOTAL") {
+                const numero = parseFloat(rawValue.replace(",", "."));
+                if (!isNaN(numero)) {
+                    style = "font-weight:bold; text-align:center; ";
+                    if (numero <= 25) {
+                        style += "background-color:#d84315; color:white;"; // Laranja Escuro
+                    } else if (numero <= 50) {
+                        style += "background-color:#fdd835; color:#333;"; // Amarelo
+                    } else if (numero <= 75) {
+                        style += "background-color:#2e7d32; color:white;"; // Verde
+                    } else {
+                        style += "background-color:#1565c0; color:white;"; // Azul
+                    }
+                }
+            }
+            // 2. COLUNAS DE PONTUAÇÃO (Vermelho/Azul)
+            else if (headerName.startsWith("PONTUAÇÃO") || headerName.startsWith("PONTUACAO") || (headerName.includes("ESCORE") && !headerName.includes("TOTAL"))) {
+                const numero = parseFloat(rawValue.replace(",", "."));
+                if (!isNaN(numero)) {
+                    style = "font-weight:bold; text-align:center; ";
+                    if (numero === 0) {
+                        style += "background-color:#e53935; color:white;"; // Vermelho
+                    } else if (numero > 0) {
+                        style += "background-color:#1e88e5; color:white;"; // Azul
+                    }
+                }
+            }
+
+            rowHTML += `<td style="${style}">${display}</td>`;
+          }
+
+          rowHTML += "</tr>";
+          html += rowHTML;
+          csv.push(cols.join(","));
+        }
+      }
+
+      html += "</table>";
+      
+      if (!hasData) {
+        html = `<p style="text-align:center; padding: 20px; color: #666; font-size: 16px;">
+                  Nenhum registro encontrado para <strong>${unidade}</strong>.
+                </p>`;
+      }
+
+      return { html, csv: lines[0] + "\n" + csv.join("\n") };
+    }
+
+    function loadFile(indicador, unidade) {
+      if (indicador === 'Selecione' || unidade === '') {
+        document.getElementById('csvContent').innerHTML = '';
+        document.getElementById('btnExcel').style.display = 'none';
+        document.getElementById('btnPdf').style.display = 'none';
+        document.getElementById('faixaEtariaBtns').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('csvContent').innerHTML = '<p style="text-align:center; padding:20px;">Carregando dados...</p>';
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', indicador + '.csv', true);
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+            ultimoCSV = xhr.responseText;
+            ultimaUnidade = unidade;
+            document.getElementById('faixaEtariaBtns').style.display = (indicador === 'c7' ? 'flex' : 'none');
+            const formatted = formatTable(ultimoCSV, unidade);
+            document.getElementById('csvContent').innerHTML = formatted.html;
+            document.getElementById("btnExcel").style.display = "block";
+            document.getElementById("btnPdf").style.display = "block";
+        } else {
+            document.getElementById('csvContent').innerHTML = '<p style="text-align:center; color:red;">Erro ao carregar arquivo.</p>';
+        }
+      };
+      xhr.send();
+    }
 
     function filtrarFaixa(btn, min, max) {
-      document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const formatted = formatTable(ultimoCSV, ultimaUnidade, min, max);
       document.getElementById('csvContent').innerHTML = formatted.html;
     }
 
     function removerFiltro() {
-      document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       const formatted = formatTable(ultimoCSV, ultimaUnidade);
       document.getElementById('csvContent').innerHTML = formatted.html;
     }
@@ -536,114 +553,76 @@ function loadFile(indicador, unidade) {
 
     window.onload = function() { switchModule('APS'); };
 
+    // Exportação
+    document.getElementById("btnExcel").onclick = function () {
+      const blob = new Blob([ultimoCSV], { type: 'text/csv;charset=utf-8;' }); 
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `Indicadores_${ultimaUnidade}.csv`;
+      link.click();
+    };
+
     document.getElementById("btnPdf").onclick = function () {
-    const { jsPDF } = window.jspdf;
+        const { jsPDF } = window.jspdf;
+        const indicadorEl = document.getElementById("indicadorSelect");
+        const nomeIndicador = indicadorEl.options[indicadorEl.selectedIndex].text;
 
-    // nome do indicador selecionado
-    const indicadorEl = document.getElementById("indicadorSelect") || document.getElementById("indicador");
-    const nomeIndicador = (indicadorEl && indicadorEl.selectedOptions && indicadorEl.selectedOptions[0]) 
-    ? indicadorEl.selectedOptions[0].text 
-    : "Sem indicador selecionado";
+        const formatted = formatTable(ultimoCSV, ultimaUnidade); 
+        const csvText = formatted.csv.trim();
+        const lines = csvText.split("\n");
+        const header = lines[0].split(",");
+        const body = lines.slice(1).map(l => l.split(","));
 
-    // usa SEMPRE o último CSV
-    const csvText = formatTable(ultimoCSV, ultimaUnidade).csv.trim();
-    const lines = csvText.split("\n");
+        const formato = header.length > 15 ? 'a3' : 'a4';
+        const pdf = new jsPDF("landscape", "mm", formato);
+        
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const dataHora = new Date().toLocaleString("pt-BR");
 
-    const header = lines[0].split(",");
-    const body = lines.slice(1).map(l => l.split(","));
+        function gerarPDF(logoBase64 = null) {
+            const isOdonto = document.body.classList.contains('modo-odonto');
+            const themeColor = isOdonto ? [46, 125, 50] : [2, 119, 189];
 
-    const pdf = new jsPDF("landscape", "mm", "a4");
+            pdf.setFontSize(14);
+            pdf.setTextColor(...themeColor);
+            pdf.text(`${nomeIndicador} - ${ultimaUnidade}`, 14, 15);
 
-    // largura útil da página
-    const pageWidth = pdf.internal.pageSize.getWidth() - 20;
-    const colCount = header.length;
-    const colWidth = pageWidth / colCount;
+            if (logoBase64) {
+                pdf.addImage(logoBase64, "PNG", pageWidth - 30, 5, 20, 20);
+            }
 
-    // data/hora para o rodapé
-    const agora = new Date();
-    const dataHora = agora.toLocaleString("pt-BR");
+            pdf.autoTable({
+                head: [header],
+                body: body,
+                startY: 25,
+                theme: "grid",
+                styles: { fontSize: 6, cellPadding: 1, valign: 'middle', halign: 'center', overflow: 'linebreak' },
+                headStyles: { fillColor: themeColor, textColor: 255, fontStyle: "bold" },
+                columnStyles: { 0: { cellWidth: 'auto', fontStyle: 'bold', halign: 'left' } },
+                margin: { top: 25, left: 5, right: 5 },
+                didDrawPage: function (data) {
+                    pdf.setFontSize(6);
+                    pdf.setTextColor(100);
+                    pdf.text(`iNFO SUS Marília — ${dataHora}`, 10, pdf.internal.pageSize.getHeight() - 5);
+                }
+            });
 
-    // ===== Função para gerar o PDF =====
-    function gerarPDF(logoBase64 = null) {
-
-        // título (AGORA COM O NOME DO INDICADOR)
-        pdf.setFontSize(14);
-        pdf.text(`Relatório de Indicador – ${nomeIndicador}`, 14, 14);
-
-        // logo opcional (20x20, mesmo tamanho que você tinha)
-        if (logoBase64) {
-            pdf.addImage(
-                logoBase64,
-                "PNG",
-                pdf.internal.pageSize.getWidth() - 30,
-                5,
-                20,
-                20
-            );
+            pdf.save(`Relatorio_${ultimaUnidade}.pdf`);
         }
 
-        pdf.autoTable({
-            head: [header],
-            body: body,
-            startY: 30,
-            theme: "grid",
-
-            styles: {
-                fontSize: 7,
-                cellPadding: 1,
-                overflow: "linebreak"
-            },
-
-            headStyles: {
-                fillColor: [0, 58, 112],
-                textColor: 255,
-                halign: "center",
-                fontStyle: "bold"
-            },
-
-            columnStyles: (() => {
-                const obj = {};
-                for (let i = 0; i < colCount; i++) {
-                    obj[i] = { cellWidth: colWidth };
-                }
-                return obj;
-            })(),
-
-            margin: { top: 30, left: 10, right: 10 },
-
-            didDrawPage: function () {
-                pdf.setFontSize(7);
-                pdf.setTextColor(80);
-                pdf.text(
-                    `iNFO SUS Marília — arquivo gerado em ${dataHora}`,
-                    10,
-                    pdf.internal.pageSize.getHeight() - 5
-                );
-            }
-        });
-
-        pdf.save("dados.pdf");
-    }
-
-    // ===== tentativa de carregar logo =====
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = "logo.png";
-
-    img.onload = function () {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        const base64 = canvas.toDataURL("image/png");
-        gerarPDF(base64);
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = "logo.png";
+        img.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            gerarPDF(canvas.toDataURL("image/png"));
+        };
+        img.onerror = function () { gerarPDF(null); };
     };
-
-    img.onerror = function () {
-        gerarPDF(); // sem logo, mas funcional
-    };
-};
   </script>
 </body>
 </html>
